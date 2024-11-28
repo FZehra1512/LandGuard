@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    @font-face {
+        font-family: 'Gilroy';
+        font-style: normal;
+        font-weight: 400;
+        src: url(./assets/fonts/Gilroy-Regular.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Gilroy';
+        font-style: normal;
+        font-weight: 500;
+        src: url(./assets/fonts/Gilroy-Medium.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Gilroy';
+        font-style: normal;
+        font-weight: 600;
+        src: url(./assets/fonts/Gilroy-SemiBold.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Gilroy';
+        font-style: normal;
+        font-weight: 700;
+        src: url(./assets/fonts/Gilroy-Bold.ttf) format('truetype');
+    }
+    @font-face {
+        font-family: 'Gilroy';
+        font-style: normal;
+        font-weight: 800;
+        src: url(./assets/fonts/Gilroy-ExtraBold.ttf) format('truetype');
+    }
+    * {
+        @apply m-0 p-0 box-border;
+    }
+    
+    body {
+        @apply font-Gilroy font-normal bg-white dark:bg-darkColor text-darkColor dark:text-compLightColor leading-5;
+    }
+    h1 {
+        @apply font-extrabold text-[3.75rem] leading-[5rem];
+    }
+    h2, h3 {
+        @apply font-bold ;
+    }
+    
+    button, a {
+        @apply no-underline outline-none border-none cursor-pointer;
+    }
+}
+
+
+@layer components {
+    .btn-gradient {
+        @apply text-white bg-gradient-to-r from-secColor via-primaryColor to-darkColor hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-primaryColor dark:focus:ring-primaryColor font-medium rounded-full text-xl px-8 py-3 text-center;
+    }
+}
+/* :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
