@@ -1,3 +1,4 @@
+import ContactPage from "./components/ContactForm"
 import Home from "./pages/Home"
 
 function App() {
@@ -5,6 +6,7 @@ function App() {
   return (
     <>
       <Home />
+      <ContactPage />
     </>
   )
 }

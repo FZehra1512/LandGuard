@@ -42,14 +42,14 @@
         @apply font-Gilroy font-normal bg-white dark:bg-darkColor text-darkColor dark:text-compLightColor leading-5;
     }
     h1 {
-        @apply font-extrabold text-[3.75rem] leading-[5rem];
+        @apply font-extrabold text-[3.75rem] leading-[4.5rem];
     }
     h2, h3 {
         @apply font-bold ;
     }
     
     button, a {
-        @apply no-underline outline-none border-none cursor-pointer;
+        @apply no-underline outline-none cursor-pointer;
     }
 }
 
@@ -57,6 +57,10 @@
 @layer components {
     .btn-gradient {
         @apply text-white bg-gradient-to-r from-secColor via-primaryColor to-darkColor hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-primaryColor dark:focus:ring-primaryColor font-medium rounded-full text-xl px-8 py-3 text-center;
+    }
+
+    .btn-outlined {
+        @apply text-darkColor hover:text-white shadow-[0_0_0_2px_rgba(11,44,36,1)] hover:shadow-none hover:border-none hover:bg-gradient-to-r from-secColor via-primaryColor to-darkColor font-medium rounded-full text-xl px-8 py-3 text-center;
     }
 }
 /* :root {
