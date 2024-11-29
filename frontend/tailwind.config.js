@@ -8,7 +8,7 @@ export default {
         primaryColor: "#247A4D",
         secColor: "#8CD29D",
         lightColor: "#BCFFC2",
-        compLightColor: "#E6EDBF",
+        compLightColor: "#E4E0C8",
       },
     },
     fontFamily: {

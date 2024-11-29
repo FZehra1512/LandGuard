@@ -8,16 +8,16 @@ const Home = () => {
         <Navbar />
       {/* Video Background */}
       <video
-        className="fixed -z-20 top-0 left-0 w-full h-full object-cover"
+        className="fixed -z-40 top-0 left-0 w-full h-full object-cover"
         src={heroVideo}
         autoPlay
         loop
         muted
       />
       {/* Color Overlay */}
-      <div className="absolute z-0 top-0 left-0 w-full h-full bg-primaryColor bg-opacity-10"></div>
+      <div className="absolute -z-30 top-0 left-0 w-full h-full bg-primaryColor bg-opacity-10"></div>
       {/* Centered Text */}
-      <div className="relative pt-[4.5rem] flex items-center justify-center h-full text-center text-white">
+      <div className="relative z-0 pt-[4.5rem] flex items-center justify-center h-full text-center text-white">
         <div className="w-2/5 flex flex-col gap-8">
           <h1>
             Satellite Insights for a Greener Karachi
