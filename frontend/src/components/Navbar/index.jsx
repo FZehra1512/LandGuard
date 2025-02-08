@@ -1,60 +1,83 @@
-import React, {useState, useEffect} from "react";
-import logo from "../../assets/images/Landguard_logo.png"
+import React, { useState, useEffect } from "react";
+import logo from "../../assets/images/Landguard_logo.png";
+import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react"; // Import icons
 
 const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    useEffect(() => {
-      const handleScroll = () => {
-        if (window.scrollY > 30) {
-          setIsScrolled(true);
-        } else {
-          setIsScrolled(false);
-        }
-      };
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
 
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }, [isScrolled]);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <nav
-      className={`fixed z-40 w-full flex items-center justify-between px-32 py-4 transition-colors duration-300 ${
-        !isScrolled ? "bg-transparent" : "bg-white shadow-md"
-      }`}
-    >
-      {/* Logo Section */}
-      <a href="/" className="flex items-center space-x-4">
-        <img src={logo} alt="Logo" className="w-10 h-10" />
-        <p className="text-3xl font-extrabold text-gray-800">
-          <span className="text-secColor">Land</span>Guard
-        </p>
-      </a>
+    <div className={`fixed z-50 w-full flex items-center justify-between transition-colors duration-300 ${
+      isScrolled || isMenuOpen? "bg-white shadow-md" : "bg-transparent"
+    }`}>
+      <nav
+        className={`w-full relative z-50 flex items-center justify-between py-3 ${
+          isScrolled || isMenuOpen? "shadow-md" : ""
+        }`}
+      >
+        {/* Logo Section */}
+        <a href="/" className="flex items-center space-x-2 sm:space-x-4">
+          <img src={logo} alt="Logo" className="w-7 sm:w-9" />
+          <p className="text-2xl sm:text-3xl font-extrabold text-primary drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] sm:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+            <span className="text-secondary">Land</span>Guard
+          </p>
+        </a>
 
-      {/* Links Section */}
-      <ul className="hidden md:flex w-1/3 justify-between text-xl font-medium">
-        <li>
-          <a href="#home">Home</a>
-        </li>
-        <li>
-          <a href="#about">Alerts</a>
-        </li>
-        <li>
-          <a href="#features">Features</a>
-        </li>
-        <li>
-          <a href="#contact">Contact</a>
-        </li>
-      </ul>
+        {/* Desktop Links */}
+        <ul className="hidden lg:flex w-1/3 justify-between text-xl font-medium">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#alerts">Alerts</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
 
-      {/* Buttons Section */}
-      <div className="space-x-8">
-        <button className="btn-gradient text-lg py-2">Login</button>
-        <button className="btn-outlined text-lg py-2 px-7">Sign Up</button>
+        {/* Desktop Buttons */}
+        <div className="hidden lg:block space-x-8">
+          <Button size="lg">Login</Button>
+          <Button variant="outline" size="lg">Sign Up</Button>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button
+          className="lg:hidden z-50"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+        </button>
+      </nav>
+
+      {/* Mobile Menu (Sliding Down) */}
+      <div
+        className={`fixed left-0 z-40 py-6 w-full bg-white transform ${
+          isMenuOpen ? "shadow-md top-14 translate-y-0" : "-translate-y-full"
+        } transition-transform duration-500 ease-in lg:hidden`}
+      >
+        <ul className="flex flex-col items-center space-y-4 py-5 text-lg font-medium">
+          <li><a href="#home" onClick={() => setIsMenuOpen(false)}>Home</a></li>
+          <li><a href="#alerts" onClick={() => setIsMenuOpen(false)}>Alerts</a></li>
+          <li><a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a></li>
+          <li><a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+        </ul>
+
+        {/* Mobile Buttons */}
+        <div className="flex flex-col items-center space-y-4 py-4">
+          <Button size="lg" className="w-2/3">Login</Button>
+          <Button variant="outline" size="lg" className="w-2/3">Sign Up</Button>
+        </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
