@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 const ContactPage = () => {
   return (
     <main className="relative max-h-fit pt-12 pb-20 flex flex-col items-center justify-center bg-white">
-      <img src={patternImage} alt="Contact" className="absolute -z-10 -top-32 sm:-top-52 md:-top-64 lg:-top-96 xl:-top-[29.5rem] left-0 w-full object-cover" />
+      {/* <img src={patternImage} alt="Contact" className="absolute -z-10 -top-32 sm:-top-52 md:-top-64 lg:-top-96 xl:-top-[29.5rem] left-0 w-full object-cover" />*/}
       <div className="text-center mb-8 w-full">
         <h2 className="text-5xl">Have Questions? Contact Us Below.</h2>
         <p className="text-xl mt-8">

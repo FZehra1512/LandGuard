@@ -1,13 +1,9 @@
-import ContactPage from "./components/ContactForm"
-import Home from "./pages/Home"
+import AppRouter from "./router/routes"
 
 function App() {
 
   return (
-    <>
-      <Home />
-      <ContactPage />
-    </>
+    <AppRouter />
   )
 }
 

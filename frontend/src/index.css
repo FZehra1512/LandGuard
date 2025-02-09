@@ -158,7 +158,7 @@
         @apply px-6 sm:px-12 xl:px-32 
     }
     body {
-        @apply bg-background text-foreground font-Gilroy font-normal leading-5;
+        @apply bg-white text-foreground font-Gilroy font-normal leading-5;
     }
     h1 {
         @apply font-extrabold text-5xl leading-[4rem] md:text-[3.75rem] md:leading-[4.5rem];
