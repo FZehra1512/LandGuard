@@ -4,8 +4,9 @@ import NotFound from "@/pages/NotFound";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/pages/Admin";
 import UpdateNDVI from "@/pages/Admin/pages/UpdateNDVI";
-// Implement lazy loading and loader component 
-// /admin should be a protected route, with only admin login 
+// TODO:Implement lazy loading and loader component 
+// TODO:/admin should be a protected route, with only admin login 
+// TODO: The app loads on each route idk why?
 const router = createBrowserRouter([
   {
     path: "/",

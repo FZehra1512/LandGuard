@@ -6,19 +6,19 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Link } from "react-router-dom"
 
 // Menu items.
 const items = [
   {
     title: "Home",
-    url: "/",
+    url: "/admin",
     icon: Home,
   },
   {
@@ -63,10 +63,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size="lg" className={`${open ? "" : "!pl-1"}`}>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon style={{width: "22px", height: "22px"}}/>
                       <span className="pl-4 text-base">{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
