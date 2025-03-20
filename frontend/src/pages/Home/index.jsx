@@ -3,6 +3,7 @@ import heroVideo from "../../assets/videos/herovideo.mp4"
 import Navbar from '../../components/Navbar';
 import { Button } from "@/components/ui/button"
 import ContactPage from '@/components/ContactForm';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -30,7 +31,9 @@ const Home = () => {
               transform underutilized spaces into thriving green areas.
             </p>
             <div className='w-full mt-4 text-center'>
-              <Button variant="secondary" size="lg">Dashboard</Button>
+              <Link to="/greeneryDashboard">
+                <Button variant="secondary" size="lg">Dashboard</Button>
+              </Link>
             </div>
           </div>
         </div>

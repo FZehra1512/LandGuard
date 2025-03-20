@@ -1,0 +1,90 @@
+.leaflet-container {
+  position: relative !important;
+  z-index: 0;
+}
+
+.ui-overlay {
+  position: absolute;
+  z-index: 1000; 
+}
+/* 
+.leaflet-bottom {
+  bottom: 70px !important;
+} */
+
+.leaflet-right {
+  right: 6px !important;
+}
+
+.leaflet-container h1, 
+.leaflet-container h2, 
+.leaflet-container h3, 
+.leaflet-container h4, 
+.leaflet-container p, 
+.leaflet-container a, 
+.leaflet-container button{
+    color: rgba(11, 44, 36, 1) !important;
+    /* background-color: rgba(254, 247, 236, 1) !important; */
+}
+/* .leaflet-control-layers {
+  width: 40px !important;
+} */
+
+.leaflet-control-zoom a, .leaflet-control-scale-line, .leaflet-control-layers {
+  background-color: rgba(254, 247, 236, 1) !important;
+}
+.leaflet-control-zoom a {
+    width: 40px !important;
+    height: 35px !important;
+    line-height: 35px !important;
+}
+
+.leaflet-bar, .leaflet-control-scale-line, .leaflet-control-layers {
+  border: 1px solid rgba(11, 44, 36, 1) !important;
+}
+.leaflet-bar {
+  border-radius: 7px !important;
+}
+.leaflet-bar a:first-child {
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+}
+.leaflet-bar a:last-child {
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.leaflet-control-scale {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.leaflet-control-scale-line {
+  line-height: unset !important;
+}
+.leaflet-control-scale-line:not(:first-child) {
+  margin-top: -1px !important;
+}
+/* .leaflet-control-zoom {
+  background: rgba(0, 0, 0, 0.7) !important;
+  border-radius: 8px;
+}
+
+.leaflet-control-zoom a {
+  color: white !important;
+}
+
+.leaflet-control-layers {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.leaflet-control-layers-toggle {
+  background: url("custom-icon.png") no-repeat center center !important;
+} */
