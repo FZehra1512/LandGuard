@@ -6,13 +6,14 @@ import {
   ZoomControl,
   ScaleControl,
   Marker,
+  Polygon,
 } from "react-leaflet";
 import MinimapControl from "@/components/GreeneryDashboardComponents/Minimap";
+import PolygonLayer from "@/components/GreeneryDashboardComponents/PolygonLayer";
 import L from "leaflet";
 import "./greeneryDashboard.css";
 import "leaflet/dist/leaflet.css";
 import LocateButton from "@/components/GreeneryDashboardComponents/LocateButton";
-// import Search from "react-leaflet-search";
 
 const layerOptions = {
   esri: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -28,6 +29,46 @@ const locateIcon = new L.Icon({
   popupAnchor: [1, -34],
 });
 
+const samplePolygons = [
+    {
+      name: "Taalib e Chaman Park, J Block",
+      ndvi : 0.5,
+      type: "Polygon",
+      coordinates: [
+        [24.959341, 67.050011],
+        [24.957882, 67.048938],
+        [24.957522, 67.050312],
+        [24.958232, 67.051502],
+        [24.959341, 67.050011],
+      ],
+    },
+    {
+      name: "Bin Qasim Park, Colony",
+      ndvi : 0.7,
+      type: "MultiPolygon",
+      coordinates: [
+        [24.814083, 67.024412],
+        [24.809369, 67.020485],
+        [24.805552, 67.026043],
+        [24.809778, 67.028725],
+        [24.811707, 67.028017],
+        [24.814083, 67.024412],
+      ],
+    },
+    {
+      name: "Sakhi Hassan Graveyard",
+      ndvi : 0.3,
+      type: "MultiPolygon",
+      coordinates: [
+        [24.961491, 67.052908],
+        [24.958087, 67.052822],
+        [24.956054, 67.055708],
+        [24.95795, 67.057747],
+        [24.961491, 67.052908],
+      ],
+    },
+];
+
 const GreeneryDashboard = () => {
   const [currentLayerUrl, setCurrentLayerUrl] = useState(layerOptions.esri);
   const [userLocation, setUserLocation] = useState(null);
@@ -39,10 +80,7 @@ const GreeneryDashboard = () => {
       zoomControl={false}
       style={{ height: "100vh", width: "100%" }}
     >
-      <ScaleControl
-        position="topright"
-        className="scale-control-custom-class"
-      />
+      <ScaleControl position="topright" />
       <ZoomControl position="topright" />
 
       <LayersControl position="topright">
@@ -74,7 +112,8 @@ const GreeneryDashboard = () => {
 
       <LocateButton position="topright" setUserLocation={setUserLocation} />
       {userLocation && <Marker position={userLocation} icon={locateIcon} />}
-      {/* <Search position="topright" /> */}
+
+        <PolygonLayer polygons={samplePolygons} />
     </MapContainer>
   );
 };
