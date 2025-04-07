@@ -1,4 +1,6 @@
 import { Polygon, Popup } from "react-leaflet";
+import PolygonPopup from "@/components/GreeneryDashboardComponents/PolygonPopup";
+
 
 //values used are just for testing now, NOT FINALIZED YET
 const getColorByNDVI = (ndvi) => {
@@ -26,7 +28,7 @@ const PolygonLayer = ({ polygons }) => {
             }}
           >
             <Popup>
-              <div style={{
+              {/* <div style={{
                 padding: "8px",
                 minWidth: "150px",
                 textAlign: "center",
@@ -36,7 +38,8 @@ const PolygonLayer = ({ polygons }) => {
                 <p style={{ margin: 0, fontSize: "14px" }}>
                   NDVI: <span style={{ fontWeight: "bold", color }}>{polygon.ndvi}</span>
                 </p>
-              </div>
+              </div> */}
+              <PolygonPopup polygon={polygon} color={color} />
             </Popup>
           </Polygon>
         );
