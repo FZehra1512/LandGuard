@@ -15,6 +15,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> }, // Default route
       { path: "greeneryDashboard", element: <GreeneryDashboard /> }, // Default route
+      {path: "create-post", element: <GreeneryDashboard /> },
       { path: "admin", 
         element: <AdminLayout />,
         children: [

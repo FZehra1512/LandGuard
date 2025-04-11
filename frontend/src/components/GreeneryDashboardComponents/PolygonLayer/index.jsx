@@ -28,17 +28,6 @@ const PolygonLayer = ({ polygons }) => {
             }}
           >
             <Popup>
-              {/* <div style={{
-                padding: "8px",
-                minWidth: "150px",
-                textAlign: "center",
-                fontFamily: "Arial, sans-serif"
-              }}>
-                <h3 style={{ margin: "0 0 5px", color: color }}>{polygon.name}</h3>
-                <p style={{ margin: 0, fontSize: "14px" }}>
-                  NDVI: <span style={{ fontWeight: "bold", color }}>{polygon.ndvi}</span>
-                </p>
-              </div> */}
               <PolygonPopup polygon={polygon} color={color} />
             </Popup>
           </Polygon>
