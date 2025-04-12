@@ -5,6 +5,8 @@ import Layout from "@/components/Layout";
 import AdminLayout from "@/pages/Admin";
 import UpdateNDVI from "@/pages/Admin/pages/UpdateNDVI";
 import GreeneryDashboard from "@/pages/GreeneryDashboard";
+import CreatePost from "@/pages/CreatePost";
+
 // TODO:Implement lazy loading and loader component 
 // TODO:/admin should be a protected route, with only admin login 
 // TODO: The app loads on each route idk why?
@@ -15,7 +17,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> }, // Default route
       { path: "greeneryDashboard", element: <GreeneryDashboard /> }, // Default route
-      {path: "create-post", element: <GreeneryDashboard /> },
+      { path: "create-post", element: <CreatePost /> },
       { path: "admin", 
         element: <AdminLayout />,
         children: [
