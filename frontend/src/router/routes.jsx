@@ -7,6 +7,7 @@ import UpdateNDVI from "@/pages/Admin/pages/UpdateNDVI";
 import GreeneryDashboard from "@/pages/GreeneryDashboard";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
+// TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
 // TODO:/admin should be a protected route, with only admin login 
 // TODO: The app loads on each route idk why?
