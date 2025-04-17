@@ -7,6 +7,9 @@ import UpdateNDVI from "@/pages/Admin/pages/UpdateNDVI";
 import GreeneryDashboard from "@/pages/GreeneryDashboard";
 import CreatePost from "@/pages/CreatePost";
 
+import Login from "@/pages/Login";
+import SignUp from "@/pages/SignUp";
+// TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
 // TODO:/admin should be a protected route, with only admin login 
 // TODO: The app loads on each route idk why?
@@ -16,7 +19,9 @@ const router = createBrowserRouter([
     element: <Layout />, // Wrap pages in a common layout
     children: [
       { index: true, element: <Home /> }, // Default route
-      { path: "greeneryDashboard", element: <GreeneryDashboard /> }, // Default route
+      { path: "greeneryDashboard", element: <GreeneryDashboard /> },
+      { path: "login", element: <Login /> },
+      { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
       { path: "admin", 
         element: <AdminLayout />,

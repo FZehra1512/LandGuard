@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../../assets/images/Landguard_logo.png";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react"; // Import icons
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,10 +30,10 @@ const Navbar = () => {
       >
         {/* Logo Section */}
         <a href="/" className="flex items-center space-x-2 sm:space-x-4">
-          <img src={logo} alt="Logo" className="w-7 sm:w-9" />
-          <p className="text-2xl sm:text-3xl font-extrabold text-primary drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] sm:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
+          <img src={logo} alt="Logo" className="w-40 sm:w-44" />
+          {/* <p className="text-2xl sm:text-3xl font-extrabold text-primary drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] sm:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.5)]">
             <span className="text-secondary">Land</span>Guard
-          </p>
+          </p> */}
         </a>
 
         {/* Desktop Links */}
@@ -45,8 +46,12 @@ const Navbar = () => {
 
         {/* Desktop Buttons */}
         <div className="hidden lg:block space-x-8">
-          <Button size="lg">Login</Button>
-          <Button variant="outline" size="lg">Sign Up</Button>
+          <Link to="/login">
+            <Button size="lg">Login</Button>
+          </Link>
+          <Link to="/signup">
+            <Button variant="outline" size="lg">Sign Up</Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -73,8 +78,12 @@ const Navbar = () => {
 
         {/* Mobile Buttons */}
         <div className="flex flex-col items-center space-y-4 py-4">
-          <Button size="lg" className="w-2/3">Login</Button>
-          <Button variant="outline" size="lg" className="w-2/3">Sign Up</Button>
+          <Link to="/login" className="w-2/3">
+            <Button size="lg" className="w-full">Login</Button>
+          </Link>
+          <Link to="/signup" className="w-2/3">
+            <Button variant="outline" size="lg" className="w-full">Sign Up</Button>
+          </Link>
         </div>
       </div>
     </div>
