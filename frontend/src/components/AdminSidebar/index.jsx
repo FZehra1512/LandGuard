@@ -1,5 +1,5 @@
 import { Calendar, Home, Inbox, Search, Settings, TreePine } from "lucide-react"
-import logo from "../../assets/images/Landguard_logo.png"
+import logo from "../../assets/images/Landguard_white_logo.png"
 
 import {
   Sidebar,
@@ -52,9 +52,12 @@ export function AppSidebar() {
     const { open } = useSidebar()
   return (
     <Sidebar variant="floating" collapsible="icon">
-      <SidebarHeader className={`${open ? "p-4" : "p-2"} flex flex-row items-center h-16 gap-4`}>
-        <div className={`${open ? "h-10 w-10" : "h-8 w-8"} rounded bg-background flex justify-center items-center`}><img src={logo} alt="Logo" className={`${open ? "w-6" : "w-4"}`} /></div>
-        <h2 className={`${open ? "block" : "hidden"} text-xl`}>LandGuard</h2>
+      <SidebarHeader className={`${open ? "p-4" : "p-2"} flex flex-row items-center h-auto justify-center`}>
+      <Link to="/">
+        <img src={logo} alt="Logo" className="w-44" />
+      </Link>
+        {/* <div className={`${open ? "h-10 w-10" : "h-8 w-8"} rounded bg-background flex justify-center items-center`}><img src={logo} alt="Logo" className={`${open ? "w-6" : "w-4"}`} /></div>
+        <h2 className={`${open ? "block" : "hidden"} text-xl`}>LandGuard</h2> */}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

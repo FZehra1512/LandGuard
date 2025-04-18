@@ -114,7 +114,7 @@
         
         --border: 165, 60%, 11%;  /* Dark green*/
         --input: 165, 60%, 11%;  /* Dark green*/
-        --ring: 135, 44%, 69%; /* Secondary Color */
+        --ring: 161, 75%, 28%; /* Secondary Color */
         --radius: 0.5rem;
     
         --chart-1: 12 76% 61%;
@@ -141,7 +141,7 @@
         --sidebar-ring: 135, 44%, 69%;
     }
     
-    .dark {
+    /* .dark {
         --background: 20 14.3% 4.1%;
         --foreground: 0 0% 95%;
         --card: 24 9.8% 10%;
@@ -174,7 +174,7 @@
         --sidebar-accent-foreground: 240 4.8% 95.9%;
         --sidebar-border: 240 3.7% 15.9%;
         --sidebar-ring: 217.2 91.2% 59.8%;
-    }
+    } */
     
     * {
         @apply m-0 p-0 box-border border-border;
