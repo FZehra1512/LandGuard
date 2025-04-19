@@ -10,6 +10,9 @@ import {
 } from "react-leaflet";
 import MinimapControl from "@/components/GreeneryDashboardComponents/Minimap";
 import PolygonLayer from "@/components/GreeneryDashboardComponents/PolygonLayer";
+import GeocoderSearch from "@/components/GreeneryDashboardComponents/GeocoderSearch";
+import AutocompleteSearch from "@/components/GreeneryDashboardComponents/AutocompleteSearch";
+
 import L from "leaflet";
 import "./greeneryDashboard.css";
 import "leaflet/dist/leaflet.css";
@@ -82,6 +85,10 @@ const GreeneryDashboard = () => {
     >
       <ScaleControl position="topright" />
       <ZoomControl position="topright" />
+      <GeocoderSearch />
+      {/* <AutocompleteSearch /> */}
+
+
 
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="ESRI Satellite">
