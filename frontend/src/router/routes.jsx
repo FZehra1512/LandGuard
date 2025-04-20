@@ -5,6 +5,8 @@ import Layout from "@/components/Layout";
 import AdminLayout from "@/pages/Admin";
 import UpdateNDVI from "@/pages/Admin/pages/UpdateNDVI";
 import GreeneryDashboard from "@/pages/GreeneryDashboard";
+import CreatePost from "@/pages/CreatePost";
+
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 // TODO: Google Auth k liye university id use ki hai
@@ -20,6 +22,7 @@ const router = createBrowserRouter([
       { path: "greeneryDashboard", element: <GreeneryDashboard /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
+      { path: "create-post", element: <CreatePost /> },
       { path: "admin", 
         element: <AdminLayout />,
         children: [

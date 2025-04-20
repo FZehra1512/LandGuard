@@ -76,6 +76,8 @@ const SignUpForm = ({ className, ...props }) => {
         title: "Error",
         description: error.message || "Failed to Sign Up",
       });
+    } finally {
+      form.reset()
     }
   };
 

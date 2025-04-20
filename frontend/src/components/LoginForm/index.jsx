@@ -71,6 +71,8 @@ const LoginForm = ({ className, ...props }) => {
         title: "Error",
         description: error.message || "Failed to login",
       });
+    } finally {
+      form.reset()
     }
   };
 
