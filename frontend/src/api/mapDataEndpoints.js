@@ -3,7 +3,7 @@ import api from "./api";
 
 export const getNDVIData = async () => {
     try {
-        const response = await api.get('/api/ndvi/getAll/')
+        const response = await api.get('/ndvi/getAll/')
         return { code: response.status, data: response.data };
     } catch (error) {
         return {
@@ -13,17 +13,13 @@ export const getNDVIData = async () => {
     }
   };
   
-// export const examplePostApiFunction = async () => {
-//   try {
-//       const response = await api.post('/posts', {
-//         title: 'My Post',
-//         content: 'Hello World',
-//       });
-//       return { code: response.status, message: response.data.message };
-//   } catch (error) {
-//       return {
-//           code: response.error.response?.status,
-//           message: response.error.response?.data,
-//       };
-//   }
-// };
+  export const getHistoricalData = async (payload) => {
+    try {
+      const response = await api.post("/ndvi/", {...payload});
+      return { code: response.status, data: response.data };
+    } catch (error) {
+      return {
+        code: response.status,
+      };
+    }
+  };

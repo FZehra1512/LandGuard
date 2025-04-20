@@ -17,10 +17,11 @@ const NDVIInfoCard = ({ selectedPolygon }) => {
       <TabsContent value="current-data" className="space-y-4 mt-4 -mr-4">
         <ScrollArea className="h-[65vh] lg:h-[60vh] pr-4">
           <h1>{selectedPolygon.name}</h1>
+          <h2>{selectedPolygon?.area}</h2>
           <div>
             <h4 className="font-medium">NDVI Score</h4>
             <p className="text-2xl font-bold">
-              {selectedPolygon.ndvi.toFixed(2)}
+              {selectedPolygon.ndvi}
             </p>
           </div>
           <div>
@@ -57,7 +58,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getHistoricalData } from "@/api/mapDashboardApis";
+import { getHistoricalData } from "@/api/mapDataEndpoints";
 import {
   Dialog,
   DialogContent,
@@ -140,17 +141,9 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
       //   "interval_days": data.interval
       // }
       const payload = {
-        area: "Gulshan-e-Iqbal",
-        place_name: "Khawateen Park",
-        coordinates: [
-          [
-            [24.895465995900306, 67.0690704347966],
-            [24.89587321906284, 67.06979676956388],
-            [24.896260576434315, 67.06944637691234],
-            [24.895846733044333, 67.06851199650819],
-            [24.895465995900306, 67.0690704347966],
-          ],
-        ],
+        area: selectedPolygon?.area || "Gulshan-e-Iqbal",
+        place_name: selectedPolygon.name,
+        coordinates: [selectedPolygon.coordinates],
         from_date: data.fromDate,
         to_date: data.toDate,
         interval_days: data.interval,

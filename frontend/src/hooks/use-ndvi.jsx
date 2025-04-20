@@ -17,9 +17,10 @@ export const NdviProvider = ({ children }) => {
         if (code === 200 && data?.length) {
           const formatted = data.map((item) => ({
             name: item.place_name,
-            ndvi: Number(item.ndvi_stats.mean.toFixed(3)),
+            ndvi: Number(item?.ndvi_stats?.mean || item?.ndvi_stats[0]?.stats?.mean).toFixed(3),
             type: "Polygon",
             coordinates: item.coordinates[0],
+            area: item?.area || ""
           }));
           setNdviPolygons(formatted);
         }
