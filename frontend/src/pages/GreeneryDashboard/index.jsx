@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -11,7 +11,8 @@ import {
 import MinimapControl from "@/components/GreeneryDashboardComponents/Minimap";
 import PolygonLayer from "@/components/GreeneryDashboardComponents/PolygonLayer";
 import GeocoderSearch from "@/components/GreeneryDashboardComponents/GeocoderSearch";
-import AutocompleteSearch from "@/components/GreeneryDashboardComponents/AutocompleteSearch";
+import { useNdvi } from "@/hooks/use-ndvi";
+
 
 import L from "leaflet";
 import "./greeneryDashboard.css";
@@ -32,49 +33,11 @@ const locateIcon = new L.Icon({
   popupAnchor: [1, -34],
 });
 
-const samplePolygons = [
-    {
-      name: "Taalib e Chaman Park, J Block",
-      ndvi : 0.5,
-      type: "Polygon",
-      coordinates: [
-        [24.959341, 67.050011],
-        [24.957882, 67.048938],
-        [24.957522, 67.050312],
-        [24.958232, 67.051502],
-        [24.959341, 67.050011],
-      ],
-    },
-    {
-      name: "Bin Qasim Park, Colony",
-      ndvi : 0.7,
-      type: "MultiPolygon",
-      coordinates: [
-        [24.814083, 67.024412],
-        [24.809369, 67.020485],
-        [24.805552, 67.026043],
-        [24.809778, 67.028725],
-        [24.811707, 67.028017],
-        [24.814083, 67.024412],
-      ],
-    },
-    {
-      name: "Sakhi Hassan Graveyard",
-      ndvi : 0.3,
-      type: "MultiPolygon",
-      coordinates: [
-        [24.961491, 67.052908],
-        [24.958087, 67.052822],
-        [24.956054, 67.055708],
-        [24.95795, 67.057747],
-        [24.961491, 67.052908],
-      ],
-    },
-];
-
 const GreeneryDashboard = () => {
   const [currentLayerUrl, setCurrentLayerUrl] = useState(layerOptions.esri);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null)
+  const { ndviPolygons, loading } = useNdvi();
+
 
   return (
     <MapContainer
@@ -86,7 +49,6 @@ const GreeneryDashboard = () => {
       <ScaleControl position="topright" />
       <ZoomControl position="topright" />
       <GeocoderSearch />
-      {/* <AutocompleteSearch /> */}
 
 
 
@@ -120,7 +82,7 @@ const GreeneryDashboard = () => {
       <LocateButton position="topright" setUserLocation={setUserLocation} />
       {userLocation && <Marker position={userLocation} icon={locateIcon} />}
 
-        <PolygonLayer polygons={samplePolygons} />
+        <PolygonLayer polygons={ndviPolygons} />
     </MapContainer>
   );
 };
