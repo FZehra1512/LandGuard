@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Polygon, Popup } from "react-leaflet";
 import PolygonPopup from "@/components/GreeneryDashboardComponents/PolygonPopup";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import NDVIInfoCard from "../NDVIInfoCard";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobileDrawer from "@/components/ui/mobile-drawer";
 
-
-//values used are just for testing now, NOT FINALIZED YET
+//TODO:values used are just for testing now, NOT FINALIZED YET
 const getColorByNDVI = (ndvi) => {
   if (ndvi > 0.6) return "green"; // High vegetation
   if (ndvi > 0.3) return "yellow"; // Moderate vegetation
@@ -10,11 +14,15 @@ const getColorByNDVI = (ndvi) => {
 };
 
 const PolygonLayer = ({ polygons }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPolygon, setSelectedPolygon] = useState();
+  const isMobile = useIsMobile();
+
   return (
     <>
       {polygons.map((polygon, index) => {
         const color = getColorByNDVI(polygon.ndvi);
-        
+
         return (
           <Polygon
             key={index}
@@ -23,27 +31,46 @@ const PolygonLayer = ({ polygons }) => {
               fillColor: color,
               fillOpacity: 0.5,
               color: color,
-              opacity: 0.8,  
-              weight: 2, 
+              opacity: 0.8,
+              weight: 2,
+            }}
+            eventHandlers={{
+              click: () => {
+                setDialogOpen(true);
+                setSelectedPolygon(polygon);
+              },
             }}
           >
-            <Popup>
-              {/* <div style={{
-                padding: "8px",
-                minWidth: "150px",
-                textAlign: "center",
-                fontFamily: "Arial, sans-serif"
-              }}>
-                <h3 style={{ margin: "0 0 5px", color: color }}>{polygon.name}</h3>
-                <p style={{ margin: 0, fontSize: "14px" }}>
-                  NDVI: <span style={{ fontWeight: "bold", color }}>{polygon.ndvi}</span>
-                </p>
-              </div> */}
+            {/* <Popup>
               <PolygonPopup polygon={polygon} color={color} />
-            </Popup>
+            </Popup> */}
           </Polygon>
         );
       })}
+
+      {isMobile ? (
+        <MobileDrawer
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          showOverlay={false}
+        >
+          <NDVIInfoCard selectedPolygon={selectedPolygon} />
+        </MobileDrawer>
+      ) : (
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen} modal={false}>
+          <DialogContent
+            aria-describedby={undefined}
+            aria-labelledby={undefined}
+            showOverlay={false}
+            className="md:w-[40vw] lg:w-[30vw] h-3/4 pointer-events-auto left-6 translate-y-[-50%] md:ml-[20vw] lg:ml-[15vw]"
+            onInteractOutside={(e) => e.preventDefault()}
+          >
+            <DialogTitle className="sr-only">Polygon Information</DialogTitle>
+            <NDVIInfoCard selectedPolygon={selectedPolygon} />
+          </DialogContent>
+        </Dialog>
+      )}
+      
     </>
   );
 };
