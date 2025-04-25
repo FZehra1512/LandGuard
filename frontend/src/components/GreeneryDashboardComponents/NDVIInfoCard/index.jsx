@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
 
 const NDVIInfoCard = ({ selectedPolygon }) => {
   const [activeTab, setActiveTab] = useState("current-data");
+  const center = selectedPolygon.coordinates[0];
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${center[0]},${center[1]}`;
 
   return (
     <Tabs
@@ -15,23 +18,90 @@ const NDVIInfoCard = ({ selectedPolygon }) => {
         <TabsTrigger value="historical-data">Historical Data</TabsTrigger>
       </TabsList>
       <TabsContent value="current-data" className="space-y-4 mt-4 -mr-4">
-        <ScrollArea className="h-[65vh] lg:h-[60vh] pr-4">
-          <h1>{selectedPolygon.name}</h1>
-          <h2>{selectedPolygon?.area}</h2>
-          <div>
-            <h4 className="font-medium">NDVI Score</h4>
-            <p className="text-2xl font-bold">
-              {selectedPolygon.ndvi}
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium">Area Type</h4>
-            <p>{selectedPolygon.type}</p>
+        <ScrollArea className="h-[65vh] lg:h-[55vh] pr-4">
+          <div className="flex flex-col space-y-6">
+            <div className="space-y-1">
+              <h1 className="text-xl font-semibold">{selectedPolygon.name}</h1>
+              <h2 className="text-primary text-sm">{selectedPolygon.area}</h2>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Card>
+                <CardContent className="p-4 space-y-1">
+                  <h4 className="font-medium flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Open in Maps
+                  </h4>
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline flex items-center gap-1 pt-2"
+                  >
+                    Directions <ExternalLink className="w-3 h-3" />
+                  </a>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-4 space-y-1">
+                  <h4 className="font-medium">Date Range</h4>
+                  <p className="text-sm">
+                    {new Date(selectedPolygon.fromDate).toLocaleDateString()} →{" "}
+                    {new Date(selectedPolygon.toDate).toLocaleDateString()}
+                  </p>
+                  <p className="text-xs text-primary">
+                    Interval: {selectedPolygon.interval} days
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardContent className="p-4">
+                <h4 className="font-medium mb-2 flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4" />
+                  NDVI Stats
+                </h4>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-primary text-xs">Min</p>
+                    <p className="text-lg font-semibold">
+                      {parseFloat(selectedPolygon.minndvi).toFixed(3)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-primary text-xs">Mean</p>
+                    <p className="text-lg font-semibold">
+                      {parseFloat(selectedPolygon.ndvi).toFixed(3)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-primary text-xs">Max</p>
+                    <p className="text-lg font-semibold">
+                      {parseFloat(selectedPolygon.maxndvi).toFixed(3)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-primary text-xs">Samples</p>
+                    <p className="text-lg font-semibold">
+                      {selectedPolygon.sampleCount}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-primary text-xs">Type</p>
+                    <p className="text-lg font-semibold">
+                      {selectedPolygon.type}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </ScrollArea>
       </TabsContent>
       <TabsContent value="historical-data" className="mt-4 -mr-4">
-        <ScrollArea className="h-[65vh] lg:h-[60vh] pr-4">
+        <ScrollArea className="h-[65vh] lg:h-[55vh] pr-4">
           <HistoricalDataForm selectedPolygon={selectedPolygon} />
         </ScrollArea>
       </TabsContent>
@@ -40,8 +110,6 @@ const NDVIInfoCard = ({ selectedPolygon }) => {
 };
 
 export default NDVIInfoCard;
-
-
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,7 +134,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
+import { BarChart3, ExternalLink, Loader2, MapPin } from "lucide-react";
 import HistoricalDataUI from "@/components/GreeneryDashboardComponents/HistoricalData";
 
 const formSchema = z
@@ -252,7 +320,6 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
           )}
         </Button>
       </form>
-
 
       <Dialog
         open={historicalDataModalOpen}

@@ -62,7 +62,7 @@ const PolygonLayer = ({ polygons }) => {
             aria-describedby={undefined}
             aria-labelledby={undefined}
             showOverlay={false}
-            className="md:w-[40vw] lg:w-[30vw] h-3/4 pointer-events-auto left-6 translate-y-[-50%] md:ml-[20vw] lg:ml-[15vw]"
+            className="md:w-[40vw] lg:w-[30vw] h-[70%] pointer-events-auto left-6 translate-y-[-50%] md:ml-[20vw] lg:ml-[15vw]"
             onInteractOutside={(e) => e.preventDefault()}
           >
             <DialogTitle className="sr-only">Polygon Information</DialogTitle>

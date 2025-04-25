@@ -24,9 +24,9 @@ const HistoricalDataUI = ({ historicalData }) => {
 
   const chartData = historicalData.ndvi_stats.map((entry) => ({
     from: formatDate(entry.from),
-    mean: entry.stats.mean,
-    min: entry.stats.min,
-    max: entry.stats.max,
+    mean: +entry.stats.mean.toFixed(3),
+    min: +entry.stats.min.toFixed(3),
+    max: +entry.stats.max.toFixed(3),
   }));
 
   return (
