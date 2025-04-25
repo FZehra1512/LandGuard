@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "@/pages/Home";
+import SocialPostsPage from "@/pages/Social";
 import NotFound from "@/pages/NotFound";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/pages/Admin";
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> }, // Default route
       { path: "greeneryDashboard", element: <GreeneryDashboard /> },
+      { path: "social", element: <SocialPostsPage /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
