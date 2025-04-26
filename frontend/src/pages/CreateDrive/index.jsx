@@ -6,17 +6,11 @@ const CreateDrive = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50 to-white">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 w-full px-6 py-4 flex items-center justify-between bg-white shadow-md">
-        <Link to="/">
-          <img src={logo} alt="Logo" className="w-32 sm:w-40" />
-        </Link>
-        <Link
-          to="/"
-          className="text-sm sm:text-base text-green-700 font-semibold hover:underline"
-        >
-          Back to Home
-        </Link>
-      </nav>
+        <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
+          <Link to="/">
+            <img src={logo} alt="Logo" className="w-40 sm:w-44" />
+          </Link>
+        </nav>
 
       {/* Main Content */}
       <div className="flex flex-1 flex-col items-center justify-center pt-28 px-6">

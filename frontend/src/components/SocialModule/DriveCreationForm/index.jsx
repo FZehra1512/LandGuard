@@ -10,14 +10,18 @@ import * as z from "zod";
 import { toast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  location: z.string().min(1, "Location is required"),
-  dateTime: z.string().min(1, "Date and Time are required"),
-  description: z.string().min(10, "Description should be at least 10 characters long"),
-  coverImage: z.string().url("Cover Image must be a valid URL"),
-  maxParticipants: z.number().min(1, "Max Participants should be at least 1"),
-  organizerName: z.string().min(1, "Organizer Name is required"),
-});
+    title: z.string().min(1, "Title is required"),
+    location: z.string().min(1, "Location is required"),
+    dateTime: z.string().min(1, "Date and Time are required"),
+    description: z.string().min(10, "Description should be at least 10 characters long"),
+    coverImage: z.string().url("Cover Image must be a valid URL").optional(),
+    maxParticipants: z.preprocess(
+      (val) => Number(val),
+      z.number().min(3, "Max Participants should be at least 3")
+    ),
+    organizerName: z.string().min(1, "Organizer Name is required"),
+  });
+  
 
 const DriveCreationForm = ({ className, ...props }) => {
   const form = useForm({
@@ -58,7 +62,7 @@ const DriveCreationForm = ({ className, ...props }) => {
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent>
-          <h1 className="text-3xl font-bold text-center">Create Plantation Drive</h1>
+          <h1 className="text-3xl my-5 font-bold text-center">Create Plantation Drive</h1>
           <form
             className="flex flex-col gap-6"
             onSubmit={form.handleSubmit(onSubmit)}
@@ -123,7 +127,7 @@ const DriveCreationForm = ({ className, ...props }) => {
               )}
             </div>
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="coverImage">Cover Image URL</Label>
               <Input
                 id="coverImage"
@@ -136,7 +140,7 @@ const DriveCreationForm = ({ className, ...props }) => {
                   {form.formState.errors.coverImage.message}
                 </p>
               )}
-            </div>
+            </div> */}
 
             <div className="grid gap-2">
               <Label htmlFor="maxParticipants">Max Participants</Label>
