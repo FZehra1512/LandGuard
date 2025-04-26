@@ -9,7 +9,7 @@ const dummyDrives = [
     title: "Plantation at City Park",
     location: "Karachi, Pakistan",
     date: "2025-05-10",
-    participants: 32,
+    participants: 50,
     capacity: 50,
   },
   {
@@ -24,7 +24,7 @@ const dummyDrives = [
 
 export default function DrivesPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="bg-slate-100 min-h-screen flex flex-col">
       <Navbar />
 
       {/* 🌱 Hero */}
