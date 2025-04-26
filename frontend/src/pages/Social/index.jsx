@@ -90,21 +90,6 @@ export default function SocialPostsPage() {
     <div className="min-h-screen flex flex-col">
       <Navbar />
 
-      {/* 🌱 Hero/Header Section */}
-      {/* <section className="bg-green-700 text-white pt-28 pb-16 px-6 md:px-12 relative overflow-hidden">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Community Plantation Spots
-          </h1>
-          <p className="text-lg mb-6 max-w-2xl mx-auto">
-            Explore and share locations that are suitable for tree plantation.
-          </p>
-          <Button variant="default" size="lg" className="bg-white text-green-700 hover:bg-gray-100 font-semibold">
-            + Add a New Spot
-          </Button>
-        </div>
-      </section> */}
-
       <section className="relative pt-28 pb-20 px-6 md:px-12 overflow-hidden bg-green-700 text-white">
         <img
           src={image1}

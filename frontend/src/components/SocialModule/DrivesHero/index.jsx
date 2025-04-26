@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import image2 from "@/assets/images/plant_bg2.png";
+import { Link } from 'react-router-dom';
+
 
 export default function DrivesHero() {
   return (
@@ -16,9 +18,11 @@ export default function DrivesHero() {
         <p className="text-lg mb-6 max-w-2xl mx-auto">
           Find events happening near you and contribute to a greener planet!
         </p>
-        <Button variant="default" size="lg" className="bg-white text-green-700 font-semibold hover:bg-gray-100">
-          + Create a New Drive
-        </Button>
+        <Link to="/create-drive">
+            <Button variant="default" size="lg" className="bg-white text-green-700 font-semibold hover:bg-gray-100">
+            + Create a New Drive
+            </Button>
+        </Link>
       </div>
     </section>
   );
