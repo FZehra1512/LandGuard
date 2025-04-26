@@ -62,6 +62,7 @@
 
 import PostsGrid from "@/components/SocialModule/PostsGrid";
 import { Button } from "@/components/ui/button";
+import { Link } from 'react-router-dom';
 import FilterBar from "@/components/SocialModule/FilterBar";
 import Navbar from "@/components/Navbar";
 import image1 from "@/assets/images/plant_bg1.png";
@@ -119,13 +120,16 @@ export default function SocialPostsPage() {
           <p className="text-lg mb-6 max-w-2xl mx-auto">
             Explore and share locations that are suitable for tree plantation.
           </p>
-          <Button
-            variant="default"
-            size="lg"
-            className="bg-white text-green-700 hover:bg-gray-100 font-semibold"
-          >
-            + Add a New Spot
-          </Button>
+          <Link to="/create-post">
+            <Button
+              variant="default"
+              size="lg"
+              className="bg-white text-green-700 hover:bg-gray-100 font-semibold"
+            >
+              + Add a New Spot
+            </Button>
+        </Link>
+
         </div>
       </section>
 

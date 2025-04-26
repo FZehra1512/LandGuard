@@ -7,6 +7,7 @@ import AdminLayout from "@/pages/Admin";
 import UpdateNDVI from "@/pages/Admin/pages/UpdateNDVI";
 import GreeneryDashboard from "@/pages/GreeneryDashboard";
 import CreatePost from "@/pages/CreatePost";
+import DrivesPage from "@/pages/Drives";
 
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> }, // Default route
       { path: "greeneryDashboard", element: <GreeneryDashboard /> },
       { path: "social", element: <SocialPostsPage /> },
+      { path: "drives", element: <DrivesPage /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
