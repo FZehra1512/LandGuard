@@ -1,0 +1,189 @@
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "@/hooks/use-toast";
+
+const formSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    location: z.string().min(1, "Location is required"),
+    dateTime: z.string().min(1, "Date and Time are required"),
+    description: z.string().min(10, "Description should be at least 10 characters long"),
+    coverImage: z.string().url("Cover Image must be a valid URL").optional(),
+    maxParticipants: z.preprocess(
+      (val) => Number(val),
+      z.number().min(3, "Max Participants should be at least 3")
+    ),
+    organizerName: z.string().min(1, "Organizer Name is required"),
+  });
+  
+
+const DriveCreationForm = ({ className, ...props }) => {
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      location: "",
+      dateTime: "",
+      description: "",
+      coverImage: "",
+      maxParticipants: 1,
+      organizerName: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      // Handle form submission logic here
+      console.log(data);
+
+      toast({
+        variant: "success",
+        title: "Success",
+        description: `Drive "${data.title}" created successfully`,
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to create drive",
+      });
+    } finally {
+      form.reset();
+    }
+  };
+
+  return (
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Card className="overflow-hidden">
+        <CardContent>
+          <h1 className="text-3xl my-5 font-bold text-center">Create Plantation Drive</h1>
+          <form
+            className="flex flex-col gap-6"
+            onSubmit={form.handleSubmit(onSubmit)}
+            noValidate
+          >
+            <div className="grid gap-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                type="text"
+                placeholder="Drive Title"
+                {...form.register("title")}
+              />
+              {form.formState.errors.title && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.title.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="location">Location</Label>
+              <Input
+                id="location"
+                type="text"
+                placeholder="Drive Location"
+                {...form.register("location")}
+              />
+              {form.formState.errors.location && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.location.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="dateTime">Date & Time</Label>
+              <Input
+                id="dateTime"
+                type="datetime-local"
+                {...form.register("dateTime")}
+              />
+              {form.formState.errors.dateTime && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.dateTime.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description</Label>
+              <Input
+                id="description"
+                type="text"
+                placeholder="Describe the drive"
+                {...form.register("description")}
+              />
+              {form.formState.errors.description && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.description.message}
+                </p>
+              )}
+            </div>
+
+            {/* <div className="grid gap-2">
+              <Label htmlFor="coverImage">Cover Image URL</Label>
+              <Input
+                id="coverImage"
+                type="url"
+                placeholder="https://example.com/cover-image.jpg"
+                {...form.register("coverImage")}
+              />
+              {form.formState.errors.coverImage && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.coverImage.message}
+                </p>
+              )}
+            </div> */}
+
+            <div className="grid gap-2">
+              <Label htmlFor="maxParticipants">Max Participants</Label>
+              <Input
+                id="maxParticipants"
+                type="number"
+                placeholder="Max number of participants"
+                {...form.register("maxParticipants")}
+              />
+              {form.formState.errors.maxParticipants && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.maxParticipants.message}
+                </p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="organizerName">Organizer Name</Label>
+              <Input
+                id="organizerName"
+                type="text"
+                placeholder="Organizer Name"
+                {...form.register("organizerName")}
+              />
+              {form.formState.errors.organizerName && (
+                <p className="text-sm text-destructive">
+                  {form.formState.errors.organizerName.message}
+                </p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Creating..." : "Create Drive"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default DriveCreationForm;
