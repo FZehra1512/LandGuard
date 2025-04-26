@@ -41,8 +41,8 @@ const GreeneryDashboard = () => {
 
   return (
     <MapContainer
-      center={[24.8607, 67.0011]}
-      zoom={12}
+      center={[24.93167048902523, 67.11313160770239]}
+      zoom={13}
       zoomControl={false}
       style={{ height: "100vh", width: "100%" }}
     >

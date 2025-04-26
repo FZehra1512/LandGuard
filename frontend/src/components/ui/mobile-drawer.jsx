@@ -41,7 +41,7 @@ const MobileDrawer = ({ open, onClose, children, showOverlay = true }) => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed bottom-0 left-0 right-0 z-[50] bg-background rounded-t-2xl p-4 max-h-[85vh] overflow-y-auto shadow-lg"
+            className="fixed bottom-0 left-0 right-0 z-[50] bg-white rounded-t-2xl p-4 max-h-[85vh] overflow-y-auto shadow-lg"
           >
             <div className="w-16 h-1 bg-accent rounded-full mx-auto mb-4" />
             {children}

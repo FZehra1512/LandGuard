@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
 
 const NDVIInfoCard = ({ selectedPolygon }) => {
   const [activeTab, setActiveTab] = useState("current-data");
@@ -8,30 +9,19 @@ const NDVIInfoCard = ({ selectedPolygon }) => {
     <Tabs
       value={activeTab}
       onValueChange={setActiveTab}
-      className="mt-2 md:mt-3"
+      className="mt-2 md:mt-4"
     >
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="current-data">Current Data</TabsTrigger>
         <TabsTrigger value="historical-data">Historical Data</TabsTrigger>
       </TabsList>
       <TabsContent value="current-data" className="space-y-4 mt-4 -mr-4">
-        <ScrollArea className="h-[65vh] lg:h-[60vh] pr-4">
-          <h1>{selectedPolygon.name}</h1>
-          <h2>{selectedPolygon?.area}</h2>
-          <div>
-            <h4 className="font-medium">NDVI Score</h4>
-            <p className="text-2xl font-bold">
-              {selectedPolygon.ndvi}
-            </p>
-          </div>
-          <div>
-            <h4 className="font-medium">Area Type</h4>
-            <p>{selectedPolygon.type}</p>
-          </div>
+        <ScrollArea className="h-[32rem] md:h-[27rem] pr-4">
+          <CurrentData selectedPolygon={selectedPolygon}/>
         </ScrollArea>
       </TabsContent>
       <TabsContent value="historical-data" className="mt-4 -mr-4">
-        <ScrollArea className="h-[65vh] lg:h-[60vh] pr-4">
+        <ScrollArea className="h-[32rem] md:h-[27rem] pr-4">
           <HistoricalDataForm selectedPolygon={selectedPolygon} />
         </ScrollArea>
       </TabsContent>
@@ -41,7 +31,95 @@ const NDVIInfoCard = ({ selectedPolygon }) => {
 
 export default NDVIInfoCard;
 
+const CurrentData = ({selectedPolygon}) => {
+  const center = selectedPolygon.coordinates[0];
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${center[0]},${center[1]}`;
+  
+  return (
+    <div className="flex flex-col space-y-4">
+      <div className="text-center space-y-1 pt-2">
+        <h1 className="text-2xl font-bold">{selectedPolygon.name}</h1>
+        <h2 className="text-primary text-base">{selectedPolygon.area}</h2>
+      </div>
 
+      <div className="space-y-1">
+        <Card>
+          <CardContent className="p-4 space-y-1">
+            <h4 className="font-medium flex items-center gap-4">
+              <MapPinned className="w-5 h-5" />
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-muted flex items-center gap-2"
+              >
+                Open Directions in Map <ExternalLink className="w-3 h-3" />
+              </a>
+            </h4>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardContent className="p-4 space-y-4">
+          <div className="flex items-start gap-4">
+            <CalendarRange className="w-5 h-5" />
+            <div className="space-y-1">
+              <h4 className="font-medium">Date Range</h4>
+              <p className="text-sm text-primary">
+                {new Date(selectedPolygon.fromDate).toLocaleDateString()} →{" "}
+                {new Date(selectedPolygon.toDate).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4">
+            <CalendarClock className="w-5 h-5" />
+            <div className="space-y-1">
+              <h4 className="font-medium">Interval</h4>
+              <p className="text-sm text-primary">
+                {selectedPolygon.interval} days
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4">
+            <BarChart4 className="w-5 h-5" />
+            <div className="space-y-1 w-full">
+              <h4 className="font-medium">NDVI Stats</h4>
+              <div className="flex justify-between w-full items-end">
+                <span className="text-sm">Mean</span>
+                <div className="flex-1 mb-1 border border-b border-dashed mx-2" />
+                <span className="text-primary font-semibold">
+                  ~{parseFloat(selectedPolygon.ndvi).toFixed(3)}
+                </span>
+              </div>
+              <div className="flex justify-between w-full items-end">
+                <span className="text-sm">Minimum</span>
+                <div className="flex-1 mb-1 border border-b border-dashed mx-2" />
+                <span className="text-primary font-semibold">
+                  ~{parseFloat(selectedPolygon.minndvi).toFixed(3)}
+                </span>
+              </div>
+              <div className="flex justify-between w-full items-end">
+                <span className="text-sm">Maximum</span>
+                <div className="flex-1 mb-1 border border-b border-dashed mx-2" />
+                <span className="text-primary font-semibold">
+                  ~{parseFloat(selectedPolygon.maxndvi).toFixed(3)}
+                </span>
+              </div>
+              <div className="flex justify-between w-full items-end">
+                <span className="text-sm">Samples</span>
+                <div className="flex-1 mb-1 border border-b border-dashed mx-2" />
+                <span className="text-primary font-semibold">
+                  {selectedPolygon.sampleCount}
+                </span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,7 +144,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
+import { BarChart4, CalendarClock, CalendarRange, ExternalLink, Loader2, MapPinned } from "lucide-react";
 import HistoricalDataUI from "@/components/GreeneryDashboardComponents/HistoricalData";
 
 const formSchema = z
@@ -149,10 +227,10 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
         interval_days: data.interval,
       };
       setLoadingHistoricalData(true);
+      setHistoricalDataModalOpen(true);
       const apiresponse = await getHistoricalData(payload);
       if (apiresponse.code === 200) {
         setHistoricalData(apiresponse.data);
-        setHistoricalDataModalOpen(true);
         toast({
           variant: "success",
           title: "Success",
@@ -172,7 +250,7 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-1">
-        <p className="text-sm text-center text-primary my-2">
+        <p className="text-sm text-center text-gray-600 my-2">
           View historical NDVI data for this location by selecting a date range
           and interval.
         </p>
@@ -244,7 +322,7 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
           )}
         </div>
 
-        <Button type="submit" className="w-full !mt-8 !mb-2">
+        <Button type="submit" className="w-full !mt-8 !mb-2" disabled={loadingHistoricalData}>
           {loadingHistoricalData ? (
             <Loader2 className="animate-spin" />
           ) : (
@@ -253,26 +331,34 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
         </Button>
       </form>
 
-
       <Dialog
         open={historicalDataModalOpen}
         onOpenChange={setHistoricalDataModalOpen}
+        className="w-[90%]"
       >
         <DialogContent
           onInteractOutside={(e) => e.preventDefault()}
-          className="h-[90vh] max-w-5xl w-full"
+          className="xl:max-w-5xl max-h-[90vh] sm:max-w-[600px] md:max-w-[800px]"
         >
           <DialogHeader>
-            <DialogTitle className="text-2xl text-center text-primary">
-              Historical Data for {selectedPolygon.name}
+            <DialogTitle className="text-3xl text-center">
+              Historical Data
             </DialogTitle>
-            <DialogDescription className="sr-only">
-              Statistical data
+            <DialogDescription className="text-center text-xl text-primary font-semibold">
+              {selectedPolygon.name}, {selectedPolygon.area}
             </DialogDescription>
           </DialogHeader>
-          {historicalData && (
-            <HistoricalDataUI historicalData={historicalData} />
+          {loadingHistoricalData && (
+            <div className="w-full h-[40vh] flex flex-col gap-4 justify-center items-center">
+              <Loader2 className="animate-spin w-6 h-6 text-primary" />
+              Hang tight, we’re getting it ready!
+            </div>
           )}
+          <div className="-mr-4">
+            {!loadingHistoricalData && historicalData && (
+              <HistoricalDataUI historicalData={historicalData} />
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </Form>
