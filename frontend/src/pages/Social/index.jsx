@@ -67,6 +67,8 @@ import FilterBar from "@/components/SocialModule/FilterBar";
 import Navbar from "@/components/Navbar";
 import image1 from "@/assets/images/plant_bg1.png";
 import image2 from "@/assets/images/contact_page_img.png";
+import logo from "../../assets/images/Landguard_logo.png";
+
 
 const dummyPosts = [
   {
@@ -88,7 +90,11 @@ const dummyPosts = [
 export default function SocialPostsPage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
+             <Link to="/">
+               <img src={logo} alt="Logo" className="w-40 sm:w-44" />
+             </Link>
+      </nav>
 
       <section className="relative pt-28 pb-20 px-6 md:px-12 overflow-hidden bg-green-700 text-white">
         <img
