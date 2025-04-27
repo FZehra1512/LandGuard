@@ -13,7 +13,7 @@ const getColorByNDVI = (ndvi) => {
   return "red"; // Low vegetation
 };
 
-const PolygonLayer = ({ polygons }) => {
+const PolygonLayer = ({ polygons, showInfoDialog = true }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPolygon, setSelectedPolygon] = useState();
   const isMobile = useIsMobile();
@@ -36,14 +36,18 @@ const PolygonLayer = ({ polygons }) => {
             }}
             eventHandlers={{
               click: () => {
-                setDialogOpen(true);
-                setSelectedPolygon(polygon);
+                if (showInfoDialog) {
+                  setDialogOpen(true);
+                  setSelectedPolygon(polygon);
+                }
               },
             }}
           >
-            {/* <Popup>
-              <PolygonPopup polygon={polygon} color={color} />
-            </Popup> */}
+            {!showInfoDialog && (
+              <Popup>
+                <PolygonPopup polygon={polygon} color={color} />
+              </Popup>
+            )}
           </Polygon>
         );
       })}
@@ -70,7 +74,6 @@ const PolygonLayer = ({ polygons }) => {
           </DialogContent>
         </Dialog>
       )}
-      
     </>
   );
 };

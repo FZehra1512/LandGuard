@@ -30,7 +30,7 @@
 //   }),
 // });
 
-// const UpdateNDVI = () => {
+// const ManageLocations = () => {
 //   const form = useForm({
 //     resolver: zodResolver(FormSchema),
 //     defaultValues: {
@@ -106,7 +106,7 @@
 //   );
 // };
 
-// export default UpdateNDVI;
+// export default ManageLocations;
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -124,8 +124,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useNdvi } from "@/hooks/use-ndvi";
+import { updateNDVIData } from "@/api/adminEndPoints";
 
 const locations = [
   {
@@ -175,8 +177,9 @@ const FormSchema = z.object({
   }),
 });
 
-const UpdateNDVI = () => {
+const ManageLocations = () => {
   const [openDropdowns, setOpenDropdowns] = useState({});
+  const { ndviPolygons, loading } = useNdvi();
 
   const toggleDropdown = (id) => {
     setOpenDropdowns((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -203,8 +206,16 @@ const UpdateNDVI = () => {
     },
   });
 
-  function onSubmit(data) {
-    console.log("in submit", data);
+  const onSubmit = async (data) => {
+    console.log("in submit", ndviPolygons);
+    const payload = {
+      locations: ndviPolygons.map(item => ({
+        place_name: item.name,
+        coordinates: item.coordinates,
+      }))
+    };
+    const apiresponse = await updateNDVIData(payload);
+    console.log("here in admin", apiresponse)
     toast({
       title: "You submitted the following values:",
       description: (
@@ -216,7 +227,12 @@ const UpdateNDVI = () => {
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="relative w-full h-full py-6">
+      {loading && (
+        <div className="absolute my-6 inset-0 bg-black/50 z-[2000] flex items-center justify-center rounded-[10px]">
+          <Loader2 className="animate-spin w-10 h-10 text-accent" />
+        </div>
+      )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -338,4 +354,4 @@ const UpdateNDVI = () => {
   );
 };
 
-export default UpdateNDVI;
+export default ManageLocations;

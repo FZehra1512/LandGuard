@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings, TreePine } from "lucide-react"
+import { Home, MapPinCheck, MapPinPlus, Search, Settings, UsersRound } from "lucide-react"
 import logo from "../../assets/images/Landguard_white_logo.png"
 
 import {
@@ -22,19 +22,19 @@ const items = [
     icon: Home,
   },
   {
-    title: "Update NDVI",
-    url: "/admin/updateNDVI",
-    icon: TreePine,
+    title: "Add Location",
+    url: "/admin/addlocation",
+    icon: MapPinPlus,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Manage Locations",
+    url: "/admin/managelocations",
+    icon: MapPinCheck,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Users",
+    url: "/admin/users",
+    icon: UsersRound,
   },
   {
     title: "Search",

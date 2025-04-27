@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -6,18 +6,18 @@ import {
   ZoomControl,
   ScaleControl,
   Marker,
-  Polygon,
 } from "react-leaflet";
 import MinimapControl from "@/components/GreeneryDashboardComponents/Minimap";
 import PolygonLayer from "@/components/GreeneryDashboardComponents/PolygonLayer";
 import GeocoderSearch from "@/components/GreeneryDashboardComponents/GeocoderSearch";
 import { useNdvi } from "@/hooks/use-ndvi";
 
-
 import L from "leaflet";
 import "./greeneryDashboard.css";
 import "leaflet/dist/leaflet.css";
 import LocateButton from "@/components/GreeneryDashboardComponents/LocateButton";
+import { useViewportHeight } from "@/hooks/use-viewport-height";
+import { Loader2 } from "lucide-react";
 
 const layerOptions = {
   esri: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -35,22 +35,25 @@ const locateIcon = new L.Icon({
 
 const GreeneryDashboard = () => {
   const [currentLayerUrl, setCurrentLayerUrl] = useState(layerOptions.esri);
-  const [userLocation, setUserLocation] = useState(null)
+  const [userLocation, setUserLocation] = useState(null);
   const { ndviPolygons, loading } = useNdvi();
-
+  const vh = useViewportHeight();
 
   return (
     <MapContainer
       center={[24.93167048902523, 67.11313160770239]}
       zoom={13}
       zoomControl={false}
-      style={{ height: "100vh", width: "100%" }}
+      style={{ height: `calc(${vh * 100}px)`, width: "100%" }}
     >
+      {loading && (
+        <div className="absolute inset-0 bg-black/50 z-[2000] flex items-center justify-center rounded-[10px]">
+          <Loader2 className="animate-spin w-10 h-10 text-accent" />
+        </div>
+      )}
       <ScaleControl position="topright" />
       <ZoomControl position="topright" />
       <GeocoderSearch />
-
-
 
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="ESRI Satellite">
@@ -82,7 +85,7 @@ const GreeneryDashboard = () => {
       <LocateButton position="topright" setUserLocation={setUserLocation} />
       {userLocation && <Marker position={userLocation} icon={locateIcon} />}
 
-        <PolygonLayer polygons={ndviPolygons} />
+      <PolygonLayer polygons={ndviPolygons} />
     </MapContainer>
   );
 };
