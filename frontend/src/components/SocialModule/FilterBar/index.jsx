@@ -38,7 +38,6 @@ import {
 export default function FilterBar() {
   const typeOptions = ["Home Garden", "Empty Plot", "Roadside Spot"];
   const areaOptions = ["Urban", "Rural", "Suburban"];
-  const availabilityOptions = ["Available", "Not Available"];
 
   return (
     <div className="relative z-10 -mt-12">
@@ -52,7 +51,6 @@ export default function FilterBar() {
           {/* Use DropdownFilter for each filter */}
           <DropdownFilter label="Type" options={typeOptions} />
           <DropdownFilter label="Area" options={areaOptions} />
-          <DropdownFilter label="Availability" options={availabilityOptions} />
         </div>
       </div>
     </div>

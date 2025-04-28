@@ -8,14 +8,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "@/hooks/use-toast";
+import { createDrive } from "@/api/SocialDataEndpoints"; 
 
 const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
     location: z.string().min(1, "Location is required"),
     dateTime: z.string().min(1, "Date and Time are required"),
     description: z.string().min(10, "Description should be at least 10 characters long"),
-    coverImage: z.string().url("Cover Image must be a valid URL").optional(),
-    maxParticipants: z.preprocess(
+    capacity: z.preprocess(
       (val) => Number(val),
       z.number().min(3, "Max Participants should be at least 3")
     ),
@@ -31,11 +31,47 @@ const DriveCreationForm = ({ className, ...props }) => {
       location: "",
       dateTime: "",
       description: "",
-      coverImage: "",
-      maxParticipants: 1,
+      capacity: 1,
       organizerName: "",
     },
   });
+
+
+  // const onSubmit = async (data) => {
+  //   try {
+  //   const newData = {
+  //     ...data,
+  //     status: "pending",
+  //     participants: 1,
+  //     createdAt: new Date().toISOString(), // Current date/time in ISO format
+  //   };
+
+  //   // Send the modified data to the backend
+  //   const response = await createDrive(newData);
+  
+  //     if (response.code === 201 || response.code === 200) {
+  //       toast({
+  //         variant: "success",
+  //         title: "Success",
+  //         description: `Drive "${data.title}" created successfully`,
+  //       });
+  //       form.reset();
+  //     } else {
+  //       toast({
+  //         variant: "destructive",
+  //         title: "Error",
+  //         description: response.data || "Failed to create drive",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Error",
+  //       description: error.message || "Failed to create drive",
+  //     });
+  //   }
+  // };
+  
 
   const onSubmit = async (data) => {
     try {
@@ -126,21 +162,6 @@ const DriveCreationForm = ({ className, ...props }) => {
                 </p>
               )}
             </div>
-
-            {/* <div className="grid gap-2">
-              <Label htmlFor="coverImage">Cover Image URL</Label>
-              <Input
-                id="coverImage"
-                type="url"
-                placeholder="https://example.com/cover-image.jpg"
-                {...form.register("coverImage")}
-              />
-              {form.formState.errors.coverImage && (
-                <p className="text-sm text-destructive">
-                  {form.formState.errors.coverImage.message}
-                </p>
-              )}
-            </div> */}
 
             <div className="grid gap-2">
               <Label htmlFor="maxParticipants">Max Participants</Label>
