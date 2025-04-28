@@ -9,7 +9,7 @@ import GreeneryDashboard from "@/pages/GreeneryDashboard";
 import CreatePost from "@/pages/CreatePost";
 import DrivesPage from "@/pages/Drives";
 import CreateDrive from "@/pages/CreateDrive";
-
+import StoryPage from "@/pages/Story";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 // TODO: Google Auth k liye university id use ki hai
@@ -26,6 +26,7 @@ const router = createBrowserRouter([
       { path: "social", element: <SocialPostsPage /> },
       { path: "drives", element: <DrivesPage /> },
       { path: "create-drive", element: <CreateDrive /> },
+      { path: "story", element: <StoryPage /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },

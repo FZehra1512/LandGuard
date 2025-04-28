@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from 'react-router-dom';
+import logo from "../../assets/images/Landguard_logo.png";
 import { X } from "lucide-react";
 import DriveCreationForm from "@/components/SocialModule/DriveCreationForm";
 import Navbar from "@/components/Navbar";
@@ -77,8 +79,11 @@ export default function DrivesPage() {
   }, []); 
   return (
     <div className="bg-slate-100 min-h-screen flex flex-col">
-      <Navbar />
-
+      <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
+             <Link to="/">
+               <img src={logo} alt="Logo" className="w-40 sm:w-44" />
+             </Link>
+      </nav>
       {/* Hero */}
       <DrivesHero onCreateClick={() => setIsCreatingDrive(true)} />
 
