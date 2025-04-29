@@ -20,6 +20,7 @@ import {
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { formatDate } from "@/lib/utils";
 
 const downloadExcel = (historicalData) => {
   if (!historicalData?.ndvi_stats) return;
@@ -42,13 +43,6 @@ const downloadExcel = (historicalData) => {
     `${historicalData.place_name || "historical-data"}.xlsx`
   );
 };
-
-const formatDate = (dateString) =>
-  new Date(dateString).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 
 const HistoricalDataUI = ({ historicalData }) => {
   if (!historicalData || !historicalData.ndvi_stats?.length) {
