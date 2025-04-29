@@ -5,6 +5,13 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+export const formatDate = (dateString) =>
+  new Date(dateString).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
 export const formatNDVIData = (data) => {
   if (!Array.isArray(data)) return [];
 

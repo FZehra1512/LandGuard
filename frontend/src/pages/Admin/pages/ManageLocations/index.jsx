@@ -1,355 +1,389 @@
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { useForm } from "react-hook-form";
-// import { z } from "zod";
+import { useState, useMemo } from "react";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  Loader2,
+  MoreHorizontal,
+} from "lucide-react";
 
-// import { toast } from "@/hooks/use-toast";
-// import { Button } from "@/components/ui/button";
-// import { Checkbox } from "@/components/ui/checkbox";
-// import {
-//   Form,
-//   FormControl,
-//   FormDescription,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-
-// const locations = [
-//   { id: "recents", label: "Recents" },
-//   { id: "home", label: "Home" },
-//   { id: "applications", label: "Applications" },
-//   { id: "desktop", label: "Desktop" },
-//   { id: "downloads", label: "Downloads" },
-//   { id: "documents", label: "Documents" },
-// ];
-
-// const FormSchema = z.object({
-//   locations: z.array(z.string()).refine((value) => value.length > 0, {
-//     message: "You have to select at least one location.",
-//   }),
-// });
-
-// const ManageLocations = () => {
-//   const form = useForm({
-//     resolver: zodResolver(FormSchema),
-//     defaultValues: {
-//       locations: ["recents", "home"],
-//     },
-//   });
-
-//   function onSubmit(data) {
-//     console.log("in submit", data);
-//     toast({
-//       title: "You submitted the following values:",
-//       description: (
-//         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-//           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-//         </pre>
-//       ),
-//     });
-//   }
-
-//   return (
-//     <div className="w-full h-full">
-//       <Form {...form}>
-//         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-//           <FormField
-//             control={form.control}
-//             name="locations"
-//             render={() => (
-//               <FormItem>
-//                 <div className="mb-4">
-//                   <FormLabel className="text-4xl font-bold">
-//                     NDVI Locations
-//                   </FormLabel>
-//                   <FormDescription className="my-4 text-base text-foreground">
-//                     Select the places for which you want to update the NDVI.
-//                   </FormDescription>
-//                 </div>
-//                 {locations.map((location) => (
-//                   <FormField
-//                     key={location.id}
-//                     control={form.control}
-//                     name="locations"
-//                     render={({ field }) => (
-//                       <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-//                         <FormControl>
-//                           <Checkbox
-//                             checked={field.value?.includes(location.id)}
-//                             onCheckedChange={(checked) => {
-//                               return checked
-//                                 ? field.onChange([...field.value, location.id])
-//                                 : field.onChange(
-//                                     field.value?.filter(
-//                                       (value) => value !== location.id
-//                                     )
-//                                   );
-//                             }}
-//                           />
-//                         </FormControl>
-//                         <FormLabel className="text-base font-normal">
-//                           {location.label}
-//                         </FormLabel>
-//                       </FormItem>
-//                     )}
-//                   />
-//                 ))}
-//                 <FormMessage />
-//               </FormItem>
-//             )}
-//           />
-//           <Button type="submit">Submit</Button>
-//         </form>
-//       </Form>
-//     </div>
-//   );
-// };
-
-// export default ManageLocations;
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
-import { useState } from "react";
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { formatDate, formatNDVIData } from "@/lib/utils";
 import { useNdvi } from "@/hooks/use-ndvi";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { updateNDVIData } from "@/api/adminEndPoints";
+import { toast } from "@/hooks/use-toast";
+import { getNDVIData } from "@/api/mapDataEndpoints";
 
-const locations = [
+export const getMapUrl = (center) => {
+  return `https://www.google.com/maps/dir/?api=1&destination=${center[0]},${center[1]}`;
+}
+
+export const columns = [
   {
-    id: "recents",
-    label: "Recents",
-    children: [],
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: true,
+    enableHiding: true,
   },
   {
-    id: "home",
-    label: "Home",
-    children: [
-      { id: "living-room", label: "Living Room" },
-      { id: "kitchen", label: "Kitchen" },
-    ],
+    accessorKey: "name",
+    header: () => <div className="w-48">Location Name</div>,
+    cell: ({ row }) => (
+      <div className="w-48 capitalize">{row.getValue("name")}</div>
+    ),
   },
   {
-    id: "applications",
-    label: "Applications",
-    children: [],
+    accessorKey: "area",
+    header: ({ column }) => {
+      return (
+        <div className="w-36 flex justify-start">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Area
+            <ArrowUpDown />
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="w-36 text-left capitalize">{row.getValue("area")}</div>
+    ),
   },
   {
-    id: "desktop",
-    label: "Desktop",
-    children: [
-      { id: "folder1", label: "Folder 1" },
-      { id: "folder2", label: "Folder 2" },
-    ],
+    accessorKey: "ndvi",
+    header: () => <div className="w-20 text-right">Mean NDVI</div>,
+    cell: ({ row }) => {
+      const amount = row.getValue("ndvi");
+      return <div className="w-20 text-right font-medium">{amount}</div>;
+    },
   },
   {
-    id: "downloads",
-    label: "Downloads",
-    children: [],
+    accessorKey: "minndvi",
+    header: () => <div className="w-16 text-right">Min NDVI</div>,
+    cell: ({ row }) => {
+      const amount = row.getValue("minndvi");
+      return <div className="w-16 text-right font-medium">{amount}</div>;
+    },
   },
   {
-    id: "documents",
-    label: "Documents",
-    children: [
-      { id: "work", label: "Work" },
-      { id: "personal", label: "Personal" },
-    ],
+    accessorKey: "maxndvi",
+    header: () => <div className="w-20 text-right">Max NDVI</div>,
+    cell: ({ row }) => {
+      const amount = row.getValue("maxndvi");
+      return <div className="w-20 text-right font-medium">{amount}</div>;
+    },
+  },
+  {
+    accessorKey: "fromDate",
+    header: () => <div className="w-20 text-right">From Date</div>,
+    cell: ({ row }) => {
+      const fDate = formatDate(row.getValue("fromDate"));
+      return <div className="w-20 text-right font-medium">{fDate}</div>;
+    },
+  },
+  {
+    accessorKey: "toDate",
+    header: () => <div className="w-20 text-right">To Date</div>,
+    cell: ({ row }) => {
+      const tDate = formatDate(row.getValue("toDate"));
+      return <div className="w-20 text-right font-medium">{tDate}</div>;
+    },
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    header: () => <div className="w-8"></div>,
+    cell: ({ row }) => {
+      const ndviPolygon = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <a
+                href={getMapUrl(ndviPolygon.coordinates[0])}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Location
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
 
-const FormSchema = z.object({
-  locations: z.array(z.string()).refine((value) => value.length > 0, {
-    message: "You have to select at least one location.",
-  }),
-});
-
 const ManageLocations = () => {
-  const [openDropdowns, setOpenDropdowns] = useState({});
-  const { ndviPolygons, loading } = useNdvi();
+  const [sorting, setSorting] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { ndviPolygons, loading, setNdviPolygons } = useNdvi();
 
-  const toggleDropdown = (id) => {
-    setOpenDropdowns((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  // Memoize the data to prevent unnecessary re-renders
+  const data = useMemo(() => {
+    // Force a new array reference when ndviPolygons changes
+    return [...ndviPolygons];
+  }, [ndviPolygons]);
 
-  const handleParentChange = (field, parentId, childIds, checked) => {
-    let updatedValues = [...field.value];
-
-    if (checked) {
-      updatedValues = [...new Set([...updatedValues, parentId, ...childIds])];
-    } else {
-      updatedValues = updatedValues.filter(
-        (id) => id !== parentId && !childIds.includes(id)
-      );
-    }
-
-    field.onChange(updatedValues);
-  };
-
-  const form = useForm({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      locations: ["recents", "home"],
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
     },
   });
 
-  const onSubmit = async (data) => {
-    console.log("in submit", ndviPolygons);
-    const payload = {
-      locations: ndviPolygons.map(item => ({
-        place_name: item.name,
-        coordinates: item.coordinates,
-      }))
-    };
-    const apiresponse = await updateNDVIData(payload);
-    console.log("here in admin", apiresponse)
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  const handleUpdateNDVI = async () => {
+    try {
+      setIsSubmitting(true);
+      const selectedRows = table.getSelectedRowModel().rows;
+      const selectedData = selectedRows.map((row) => row.original);
+      if (selectedData.length > 10) {
+        toast({
+          variant: "warning",
+          title: "Warning",
+          description: "You can only select 10 rows at a time",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+      const payload = {
+        locations: selectedData.map((item) => ({
+          place_name: item.name,
+          coordinates: item.coordinates,
+        })),
+      };
+      const apiresponse = await updateNDVIData(payload);
+      if (apiresponse.code === 200) {
+        const { code, data } = await getNDVIData();
+        if (code === 200 && data?.length) {
+          const formatted = formatNDVIData(data);
+          setNdviPolygons(formatted);
+          toast({
+            variant: "success",
+            title: "Success",
+            description: `Locations updated successfully!`,
+          });
+          // Clear all selected rows
+          setRowSelection({});
+          setIsSubmitting(false);
+        }
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update locations. Please try again.",
+      });
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="relative w-full h-full py-6">
-      {loading && (
+    <div className="relative h-full w-full pt-6">
+      {(loading || isSubmitting) && (
         <div className="absolute my-6 inset-0 bg-black/50 z-[2000] flex items-center justify-center rounded-[10px]">
           <Loader2 className="animate-spin w-10 h-10 text-accent" />
         </div>
       )}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="locations"
-            render={() => (
-              <FormItem>
-                <div className="mb-4">
-                  <FormLabel className="text-4xl font-bold">
-                    NDVI Locations
-                  </FormLabel>
-                  <FormDescription className="my-4 text-base text-foreground">
-                    Select the places for which you want to update the NDVI.
-                  </FormDescription>
-                </div>
-                {locations.map((location) => (
-                  <FormField
-                    key={location.id}
-                    control={form.control}
-                    name="locations"
-                    render={({ field }) => {
-                      const childIds = location.children.map(
-                        (child) => child.id
-                      );
-                      const allChildrenSelected = childIds.every((id) =>
-                        field.value.includes(id)
-                      );
-                      const isParentChecked =
-                        field.value.includes(location.id) ||
-                        allChildrenSelected;
-
-                      return (
-                        <div>
-                          <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <Checkbox
-                                checked={isParentChecked}
-                                onCheckedChange={(checked) =>
-                                  handleParentChange(
-                                    field,
-                                    location.id,
-                                    childIds,
-                                    checked
-                                  )
-                                }
-                              />
-                            </FormControl>
-                            <FormLabel className="text-base font-normal">
-                              {location.label}
-                            </FormLabel>
-                            {location.children.length > 0 && (
-                              <button
-                                type="button"
-                                onClick={() => toggleDropdown(location.id)}
-                                className="focus:outline-none"
-                              >
-                                {openDropdowns[location.id] ? (
-                                  <ChevronDown size={20} />
-                                ) : (
-                                  <ChevronUp size={20} />
-                                )}
-                              </button>
-                            )}
-                          </FormItem>
-
-                          {/* Render children if the dropdown is open */}
-                          {openDropdowns[location.id] &&
-                            location.children.length > 0 && (
-                              <div className="pl-6 space-y-2">
-                                {location.children.map((child) => (
-                                  <FormField
-                                    key={child.id}
-                                    control={form.control}
-                                    name="locations"
-                                    render={({ field }) => (
-                                      <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                                        <FormControl>
-                                          <Checkbox
-                                            checked={field.value.includes(
-                                              child.id
-                                            )}
-                                            onCheckedChange={(checked) =>
-                                              checked
-                                                ? field.onChange([
-                                                    ...field.value,
-                                                    child.id,
-                                                  ])
-                                                : field.onChange(
-                                                    field.value.filter(
-                                                      (value) =>
-                                                        value !== child.id
-                                                    )
-                                                  )
-                                            }
-                                          />
-                                        </FormControl>
-                                        <FormLabel className="text-sm font-normal">
-                                          {child.label}
-                                        </FormLabel>
-                                      </FormItem>
-                                    )}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                        </div>
-                      );
-                    }}
-                  />
-                ))}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-5 pb-4">
+        <Input
+          placeholder="Filter locations..."
+          value={table.getColumn("name")?.getFilterValue() ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <div className="flex justify-between w-full">
+          <Button
+            variant="outline"
+            disabled={table.getSelectedRowModel().rows.length < 1}
+            onClick={handleUpdateNDVI}
+          >
+            Update NDVI
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+      <ScrollArea className="rounded-md border border-slate-300 ">
+        <Table>
+          <TableHeader className="border-slate-300">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow
+                key={headerGroup.id}
+                className="hover:bg-unset border-slate-300"
+              >
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+        </Table>
+        <ScrollArea className="h-[60dvh]">
+          <Table>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="hover:bg-slate-100 data-[state=selected]:bg-slate-100 border-slate-300"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+      <div className="flex items-center justify-end space-x-2 pt-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

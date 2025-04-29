@@ -27,6 +27,7 @@ import "./addLocation.css";
 import { addLocation } from "@/api/adminEndPoints";
 import { getNDVIData } from "@/api/mapDataEndpoints";
 import { formatNDVIData } from "@/lib/utils";
+import GeocoderSearch from "@/components/GreeneryDashboardComponents/GeocoderSearch";
 
 const AddLocation = () => {
   const { ndviPolygons, setNdviPolygons, loading } = useNdvi();
@@ -95,8 +96,8 @@ const AddLocation = () => {
     // Validate inputs
     if (!tempPolygon.placeName.trim()) {
       toast({
-        variant: "destructive",
-        title: "Error",
+        variant: "warning",
+        title: "Warning",
         description: "Please enter a place name",
       });
       return;
@@ -104,8 +105,8 @@ const AddLocation = () => {
 
     if (!tempPolygon.area.trim()) {
       toast({
-        variant: "destructive",
-        title: "Error",
+        variant: "warning",
+        title: "Warning",
         description: "Please enter an area name",
       });
       return;
@@ -294,6 +295,7 @@ const AddLocation = () => {
       >
         <ScaleControl position="topright" />
         <ZoomControl position="topright" />
+        <GeocoderSearch />
 
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
