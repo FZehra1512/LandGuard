@@ -59,15 +59,15 @@
 // }
 
 
-
+import { useEffect, useState } from 'react';
 import PostsGrid from "@/components/SocialModule/PostsGrid";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import FilterBar from "@/components/SocialModule/FilterBar";
-import Navbar from "@/components/Navbar";
 import image1 from "@/assets/images/plant_bg1.png";
 import image2 from "@/assets/images/contact_page_img.png";
 import logo from "../../assets/images/Landguard_logo.png";
+import { getPosts } from "@/api/SocialDataEndpoints";
 
 
 const dummyPosts = [
@@ -88,6 +88,24 @@ const dummyPosts = [
 ];
 
 export default function SocialPostsPage() {
+
+  const [posts, setPosts] = useState([]); //use this instead of dummyposts afterwards
+
+  useEffect(() => {
+    // Fetch posts from the backend when the component mounts
+    const getPostsFromBackend = async () => {
+      try {
+        const { data } = await getPosts();  // Fetch the posts from the API
+        setPosts(data);  // Assuming the data is an array of posts
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    
+    getPostsFromBackend();  // Call the function to fetch posts
+  }, []);
+
+
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
@@ -127,7 +145,7 @@ export default function SocialPostsPage() {
       <FilterBar />
 
       {/* 🪴 Posts Grid */}
-      <section className="container mx-auto px-6 py-12">
+      <section className="container mx-auto px-6">
         <PostsGrid posts={dummyPosts} />
       </section>
     </div>
