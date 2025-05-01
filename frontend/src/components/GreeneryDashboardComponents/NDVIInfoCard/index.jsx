@@ -67,8 +67,8 @@ const CurrentData = ({selectedPolygon}) => {
             <div className="space-y-1">
               <h4 className="font-medium">Date Range</h4>
               <p className="text-sm text-primary">
-                {new Date(selectedPolygon.fromDate).toLocaleDateString()} →{" "}
-                {new Date(selectedPolygon.toDate).toLocaleDateString()}
+                {formatDate(selectedPolygon.fromDate)} →{" "}
+                {formatDate(selectedPolygon.toDate)}
               </p>
             </div>
           </div>
@@ -146,6 +146,7 @@ import {
 } from "@/components/ui/dialog";
 import { BarChart4, CalendarClock, CalendarRange, ExternalLink, Loader2, MapPinned } from "lucide-react";
 import HistoricalDataUI from "@/components/GreeneryDashboardComponents/HistoricalData";
+import { formatDate } from "@/lib/utils";
 
 const formSchema = z
   .object({

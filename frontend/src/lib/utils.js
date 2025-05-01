@@ -7,6 +7,7 @@ export function cn(...inputs) {
 
 export const formatDate = (dateString) =>
   new Date(dateString).toLocaleDateString("en-GB", {
+    timeZone: "UTC",
     day: "2-digit",
     month: "short",
     year: "numeric",

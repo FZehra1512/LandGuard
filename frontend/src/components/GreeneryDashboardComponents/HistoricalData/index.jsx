@@ -26,8 +26,8 @@ const downloadExcel = (historicalData) => {
   if (!historicalData?.ndvi_stats) return;
 
   const worksheetData = historicalData.ndvi_stats.map((stat) => ({
-    "From Date": new Date(stat.from).toLocaleDateString(),
-    "To Date": new Date(stat.to).toLocaleDateString(),
+    "From Date": formatDate(stat.from),
+    "To Date": formatDate(stat.to),
     "Min NDVI": stat.stats.min.toFixed(3),
     "Mean NDVI": stat.stats.mean.toFixed(3),
     "Max NDVI": stat.stats.max.toFixed(3),
@@ -137,10 +137,10 @@ const HistoricalDataUI = ({ historicalData }) => {
                   <TableRow key={index}>
                     <TableCell className="py-2">{index + 1}</TableCell>
                     <TableCell className="py-2">
-                      {new Date(stat.from).toLocaleDateString()}
+                      {formatDate(stat.from)}
                     </TableCell>
                     <TableCell className="py-2">
-                      {new Date(stat.to).toLocaleDateString()}
+                      {formatDate(stat.to)}
                     </TableCell>
                     <TableCell className="py-2">
                       {stat.stats.min.toFixed(3)}
