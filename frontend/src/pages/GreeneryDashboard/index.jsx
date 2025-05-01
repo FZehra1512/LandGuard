@@ -18,6 +18,7 @@ import "leaflet/dist/leaflet.css";
 import LocateButton from "@/components/GreeneryDashboardComponents/LocateButton";
 import { useViewportHeight } from "@/hooks/use-viewport-height";
 import { Loader2 } from "lucide-react";
+import SearchBox from "@/components/GreeneryDashboardComponents/GeocoderSearch";
 
 const layerOptions = {
   esri: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -25,10 +26,9 @@ const layerOptions = {
   osm: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 };
 
-const locateIcon = new L.Icon({
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  iconSize: [25, 41],
+export const locateIcon = new L.Icon({
+  iconUrl: "/map_marker.png",
+  iconSize: [29, 45],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
 });
@@ -44,6 +44,8 @@ const GreeneryDashboard = () => {
       center={[24.93167048902523, 67.11313160770239]}
       zoom={13}
       zoomControl={false}
+      scrollWheelZoom={false}
+      touchZoom={true}
       style={{ height: `calc(${vh * 100}px)`, width: "100%" }}
     >
       {loading && (
@@ -51,9 +53,9 @@ const GreeneryDashboard = () => {
           <Loader2 className="animate-spin w-10 h-10 text-accent" />
         </div>
       )}
-      <ScaleControl position="topright" />
       <ZoomControl position="topright" />
-      <GeocoderSearch />
+      <ScaleControl position="topright" />
+      <SearchBox setSearchLocation={setUserLocation}/>
 
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="ESRI Satellite">

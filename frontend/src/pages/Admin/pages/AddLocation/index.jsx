@@ -6,6 +6,7 @@ import {
   TileLayer,
   ZoomControl,
   FeatureGroup,
+  Marker,
 } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,9 @@ import "./addLocation.css";
 import { addLocation } from "@/api/adminEndPoints";
 import { getNDVIData } from "@/api/mapDataEndpoints";
 import { formatNDVIData } from "@/lib/utils";
-import GeocoderSearch from "@/components/GreeneryDashboardComponents/GeocoderSearch";
+import SearchBox from "@/components/GreeneryDashboardComponents/GeocoderSearch";
+import { locateIcon } from "@/pages/GreeneryDashboard";
+import LocateButton from "@/components/GreeneryDashboardComponents/LocateButton";
 
 const AddLocation = () => {
   const { ndviPolygons, setNdviPolygons, loading } = useNdvi();
@@ -36,6 +39,7 @@ const AddLocation = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempPolygon, setTempPolygon] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchLocation, setSearchLocation] = useState(null);
   const featureGroupRef = useRef();
   const layerRefs = useRef({}); // Store layer references to identify polygons
   const polygonDataRef = useRef({}); // Store polygon data directly in the layer object
@@ -228,7 +232,7 @@ const AddLocation = () => {
           <Loader2 className="animate-spin w-10 h-10 text-accent" />
         </div>
       )}
-      <div className="absolute right-4 md:right-[45%] bottom-14 z-[1000]">
+      <div className="absolute right-4 md:right-[45%] bottom-24 md:bottom-14 z-20">
         {!drawMode ? (
           <Button onClick={toggleDrawMode} variant="outline">
             Enable Drawing
@@ -291,11 +295,15 @@ const AddLocation = () => {
         center={[24.93167048902523, 67.11313160770239]}
         zoom={13}
         zoomControl={false}
+        scrollWheelZoom={false}
+        touchZoom={true}
         style={{ height: "100%", width: "100%", borderRadius: "10px" }}
       >
-        <ScaleControl position="topright" />
         <ZoomControl position="topright" />
-        <GeocoderSearch />
+        <ScaleControl position="topright" />
+        <SearchBox setSearchLocation={setSearchLocation} />
+        <LocateButton position="topright" setUserLocation={setSearchLocation} />
+        {searchLocation && <Marker position={searchLocation} icon={locateIcon}/>}
 
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
