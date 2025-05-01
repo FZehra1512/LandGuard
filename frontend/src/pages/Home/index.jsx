@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import { Button } from "@/components/ui/button"
 import ContactPage from '@/components/ContactForm';
 import CreatePostSection from '@/components/CreatePostSection';
+import UpcomingDrivesSection from '@/components/SocialModule/UpcomingDrivesSection';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -39,7 +40,8 @@ const Home = () => {
           </div>
         </div>
       </header>
-      <CreatePostSection/>
+      {/* <CreatePostSection/> */}
+      <UpcomingDrivesSection />
       <ContactPage />
     </>
   );

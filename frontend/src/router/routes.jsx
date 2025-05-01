@@ -1,11 +1,14 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "@/pages/Home";
+import SocialPostsPage from "@/pages/Social";
 import NotFound from "@/pages/NotFound";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/pages/Admin";
 import GreeneryDashboard from "@/pages/GreeneryDashboard";
 import CreatePost from "@/pages/CreatePost";
-
+import DrivesPage from "@/pages/Drives";
+import CreateDrive from "@/pages/CreateDrive";
+import StoryPage from "@/pages/Story";
 import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import AddLocation from "@/pages/Admin/pages/AddLocation";
@@ -21,6 +24,10 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> }, // Default route
       { path: "greeneryDashboard", element: <GreeneryDashboard /> },
+      { path: "social", element: <SocialPostsPage /> },
+      { path: "drives", element: <DrivesPage /> },
+      { path: "create-drive", element: <CreateDrive /> },
+      { path: "story", element: <StoryPage /> },
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
