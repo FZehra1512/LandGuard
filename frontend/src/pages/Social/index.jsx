@@ -75,17 +75,26 @@ const dummyPosts = [
     id: 1,
     title: "Empty Garden Behind House",
     description: "A good-sized garden area that could host 10–15 plants.",
-    location: "Karachi, Pakistan",
+    location: {
+      name: "Karachi, Pakistan",
+      latitude: 24.8607,
+      longitude: 67.0011,
+    },
     image: image1,
   },
   {
     id: 2,
     title: "Vacant Plot Near Gulshan",
     description: "Unused land available for plantation initiatives.",
-    location: "Gulshan-e-Iqbal, Karachi",
+    location: {
+      name: "Gulshan-e-Iqbal, Karachi",
+      latitude: 24.9263,
+      longitude: 67.1124,
+    },
     image: image2,
   },
 ];
+
 
 export default function SocialPostsPage() {
 
@@ -145,9 +154,12 @@ export default function SocialPostsPage() {
       <FilterBar />
 
       {/* 🪴 Posts Grid */}
-      <section className="container mx-auto px-6">
-        <PostsGrid posts={dummyPosts} />
+      <section className="bg-amber-50">
+        <div className="container mx-auto px-6">
+          <PostsGrid posts={dummyPosts} />
+        </div>
       </section>
+
     </div>
   );
 }
