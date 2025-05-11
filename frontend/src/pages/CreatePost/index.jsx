@@ -1,11 +1,26 @@
 import { useState } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/hooks/use-toast";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMap,
+  ZoomControl,
+  useMapEvents
+} from 'react-leaflet';
 import L from 'leaflet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
+import { createLandPost } from '@/api/SocialDataEndpoints';
+import SearchBox from '@/components/SocialModule/FormSearch';
 import 'leaflet/dist/leaflet.css';
 
+// Fix leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
@@ -13,112 +28,154 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
-const LocationPicker = ({ setLocation }) => {
-  const [markerPos, setMarkerPos] = useState([24.8607, 67.0011]);
+// Schema
+const postSchema = z.object({
+  title: z.string().min(3),
+  location: z.string().nonempty("Location is required"),
+  description: z.string().min(10),
+  image: z.instanceof(File).optional(),
+});
+
+const LocationPicker = ({ markerPos, setMarkerPos, onLocationSelect }) => {
   useMapEvents({
     click(e) {
       const { lat, lng } = e.latlng;
-      setMarkerPos([lat, lng]);
-      setLocation(`${lat.toFixed(5)}, ${lng.toFixed(5)}`);
+      const newPos = [lat, lng];
+      setMarkerPos(newPos);
+      onLocationSelect(`${lat.toFixed(5)}, ${lng.toFixed(5)}`);
     },
   });
-  return markerPos && <Marker position={markerPos} />;
+
+  return <Marker position={markerPos} />;
 };
 
 const CreatePost = () => {
-  const [title, setTitle] = useState('');
-  const [location, setLocation] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [markerPos, setMarkerPos] = useState([24.8607, 67.0011]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({ title, location, description, image });
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      title: '',
+      location: '',
+      description: '',
+      image: undefined,
+    },
+  });
+
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('location', data.location);
+    formData.append('description', data.description);
+    if (data.image) {
+      formData.append('image', data.image);
+    }
+
+    const res = await createLandPost(formData);
+    if (res.code === 200 || res.code === 201) {
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Post submitted successfully",
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: res.message || "Error submitting post",
+      });
+    }
+  };
+
+  const handleSearchLocation = (coords) => {
+    setMarkerPos(coords);
+    setValue('location', `${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}`);
   };
 
   return (
     <>
       <Navbar />
-      <main className="min-h-screen text-foreground px-4 sm:px-6 lg:px-8 py-20">
+      <main className="min-h-screen px-4 sm:px-6 lg:px-8 py-20">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold mb-2 text-primary tracking-tight">
-            Post Your Land for Plantation
-          </h1>
+          <h1 className="text-4xl font-bold text-primary">Post Your Land for Plantation</h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Share an area in need of greenery. Include details, image, and select its location on the map.
           </p>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-3xl mx-auto bg-card p-8 rounded-2xl shadow-lg space-y-6 border border-border"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="max-w-3xl mx-auto bg-card p-8 rounded-2xl shadow-lg border space-y-6">
           {/* Title */}
           <div>
-            <label className="block text-sm font-semibold mb-1 text-foreground">Title</label>
-            <Input
-              type="text"
-              placeholder="E.g., Open Land near Korangi"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
+            <label className="block text-sm font-semibold mb-1">Title</label>
+            <Input {...register("title")} placeholder="E.g., Empty plot in Clifton" />
+            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
           </div>
 
-          {/* Map Location */}
+          {/* Location */}
           <div>
-            <label className="block text-sm font-semibold mb-2 text-foreground">Location</label>
-            <div className="mb-2 text-sm text-muted-foreground">
-              Click on the map to select a location.
-            </div>
+            <label className="block text-sm font-semibold mb-2">Location</label>
+            <div className="text-sm text-muted-foreground mb-2">Search or click on the map to pick coordinates.</div>
             <Input
-              type="text"
-              value={location}
               readOnly
               className="mb-4 cursor-not-allowed"
+              value={watch('location')}
             />
-            <MapContainer
-              center={[24.8607, 67.0011]}
-              zoom={13}
-              scrollWheelZoom={false}
-              style={{ height: '300px', borderRadius: '1rem' }}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <LocationPicker setLocation={setLocation} />
-            </MapContainer>
+            <div className="relative">
+              <MapContainer
+                center={markerPos}
+                zoom={13}
+                scrollWheelZoom={true}
+                style={{ height: '400px', borderRadius: '1rem' }}
+                zoomControl={false} // Disable default zoom controls
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <ZoomControl position="bottomright" /> {/* Add zoom controls back in bottom-right */}
+                <SearchBox setSearchLocation={handleSearchLocation} />
+                <LocationPicker
+                  markerPos={markerPos}
+                  setMarkerPos={setMarkerPos}
+                  onLocationSelect={(loc) => setValue('location', loc)}
+                />
+              </MapContainer>
+
+            </div>
+            {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>}
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-semibold mb-1 text-foreground">Description</label>
-            <textarea
-              rows={5}
-              placeholder="Describe the area, greenery situation, any info"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-white border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+            <label className="block text-sm font-semibold mb-1">Description</label>
+            <Textarea
+              {...register("description")}
+              placeholder="Explain the condition of land and nearby area"
+              className="resize-none"
             />
+            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
           </div>
 
           {/* Image Upload */}
           <div>
-            <label className="block text-sm font-semibold mb-1 text-foreground">Upload Image</label>
+            <label className="block text-sm font-semibold mb-1">Upload Image</label>
             <Input
               type="file"
               accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
+              onChange={(e) => setValue('image', e.target.files[0])}
             />
+            {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>}
           </div>
 
-          {/* Submit */}
-          <div className="pt-4">
-            <Button type="submit" className="w-full">
-              Submit Post
-            </Button>
-          </div>
+          <Button type="submit" className="w-full">
+            Submit Post
+          </Button>
         </form>
       </main>
     </>
@@ -126,127 +183,3 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
-
-
-
-
-
-
-// import { useState } from "react";
-// import { useForm } from "react-hook-form";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import * as z from "zod";
-// import { toast } from "@/hooks/use-toast";
-// import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-// import L from "leaflet";
-// import "leaflet/dist/leaflet.css";
-
-// // Zod schema for form validation
-// const postFormSchema = z.object({
-//   title: z.string().min(1, "Title is required"),
-//   description: z.string().min(10, "Description should be at least 10 characters"),
-//   location: z.string().min(1, "Location is required"),
-//   imageUrl: z.string().url("Please enter a valid URL for the image"),
-// });
-
-// const CreatePost = ({ className, ...props }) => {
-//   const [position, setPosition] = useState(null);
-//   const form = useForm({
-//     resolver: zodResolver(postFormSchema),
-//     defaultValues: {
-//       title: "",
-//       description: "",
-//       location: "",
-//       imageUrl: "",
-//     },
-//   });
-
-//   // Custom map event to set position when clicked
-//   const handleMapClick = (e) => {
-//     setPosition(e.latlng);
-//     form.setValue("location", `${e.latlng.lat}, ${e.latlng.lng}`);
-//   };
-
-//   // Handle form submission
-//   const onSubmit = async (data) => {
-//     try {
-//       // Call your API or handle data here
-//       console.log(data);
-//       toast({
-//         variant: "success",
-//         title: "Success",
-//         description: `Post created successfully!`,
-//       });
-//     } catch (error) {
-//       toast({
-//         variant: "destructive",
-//         title: "Error",
-//         description: error.message || "Failed to create post",
-//       });
-//     }
-//   };
-
-//   return (
-//     <div className={cn("flex flex-col gap-6", className)} {...props}>
-//       <div className="flex flex-col gap-6 p-6">
-//         <h1 className="text-3xl font-bold">Create a New Post</h1>
-//         <form
-//           className="flex flex-col gap-6"
-//           onSubmit={form.handleSubmit(onSubmit)}
-//           noValidate
-//         >
-//           <div className="grid gap-2">
-//             <Label htmlFor="title">Title</Label>
-//             <Input id="title" {...form.register("title")} />
-//             {form.formState.errors.title && (
-//               <p className="text-sm text-destructive">{form.formState.errors.title.message}</p>
-//             )}
-//           </div>
-//           <div className="grid gap-2">
-//             <Label htmlFor="description">Description</Label>
-//             <Input id="description" {...form.register("description")} />
-//             {form.formState.errors.description && (
-//               <p className="text-sm text-destructive">{form.formState.errors.description.message}</p>
-//             )}
-//           </div>
-//           <div className="grid gap-2">
-//             <Label htmlFor="imageUrl">Image URL</Label>
-//             <Input id="imageUrl" {...form.register("imageUrl")} />
-//             {form.formState.errors.imageUrl && (
-//               <p className="text-sm text-destructive">{form.formState.errors.imageUrl.message}</p>
-//             )}
-//           </div>
-
-//           {/* Map */}
-//           <div className="relative h-64">
-//             <MapContainer
-//               center={[51.505, -0.09]}
-//               zoom={13}
-//               className="h-full"
-//               onClick={handleMapClick}
-//             >
-//               <TileLayer
-//                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//               />
-//               {position && <Marker position={position} />}
-//             </MapContainer>
-//           </div>
-
-//           <Button
-//             type="submit"
-//             className="w-full"
-//             disabled={form.formState.isSubmitting}
-//           >
-//             {form.formState.isSubmitting ? "Creating Post..." : "Create Post"}
-//           </Button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default CreatePost;

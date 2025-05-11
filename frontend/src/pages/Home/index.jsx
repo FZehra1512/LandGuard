@@ -40,7 +40,7 @@ const Home = () => {
           </div>
         </div>
       </header>
-      {/* <CreatePostSection/> */}
+      <CreatePostSection/>
       <UpcomingDrivesSection />
       <ContactPage />
     </>

@@ -59,15 +59,15 @@
 // }
 
 
-
+import { useEffect, useState } from 'react';
 import PostsGrid from "@/components/SocialModule/PostsGrid";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import FilterBar from "@/components/SocialModule/FilterBar";
-import Navbar from "@/components/Navbar";
 import image1 from "@/assets/images/plant_bg1.png";
 import image2 from "@/assets/images/contact_page_img.png";
 import logo from "../../assets/images/Landguard_logo.png";
+import { getPosts } from "@/api/SocialDataEndpoints";
 
 
 const dummyPosts = [
@@ -75,19 +75,46 @@ const dummyPosts = [
     id: 1,
     title: "Empty Garden Behind House",
     description: "A good-sized garden area that could host 10–15 plants.",
-    location: "Karachi, Pakistan",
+    location: {
+      name: "Karachi, Pakistan",
+      latitude: 24.8607,
+      longitude: 67.0011,
+    },
     image: image1,
   },
   {
     id: 2,
     title: "Vacant Plot Near Gulshan",
     description: "Unused land available for plantation initiatives.",
-    location: "Gulshan-e-Iqbal, Karachi",
+    location: {
+      name: "Gulshan-e-Iqbal, Karachi",
+      latitude: 24.9263,
+      longitude: 67.1124,
+    },
     image: image2,
   },
 ];
 
+
 export default function SocialPostsPage() {
+
+  const [posts, setPosts] = useState([]); //use this instead of dummyposts afterwards
+
+  useEffect(() => {
+    // Fetch posts from the backend when the component mounts
+    const getPostsFromBackend = async () => {
+      try {
+        const { data } = await getPosts();  // Fetch the posts from the API
+        setPosts(data);  // Assuming the data is an array of posts
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    
+    getPostsFromBackend();  // Call the function to fetch posts
+  }, []);
+
+
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
@@ -127,9 +154,12 @@ export default function SocialPostsPage() {
       <FilterBar />
 
       {/* 🪴 Posts Grid */}
-      <section className="container mx-auto px-6 py-12">
-        <PostsGrid posts={dummyPosts} />
+      <section className="bg-amber-50">
+        <div className="container mx-auto px-6">
+          <PostsGrid posts={dummyPosts} />
+        </div>
       </section>
+
     </div>
   );
 }
