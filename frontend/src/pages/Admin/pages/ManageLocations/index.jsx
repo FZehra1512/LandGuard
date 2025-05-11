@@ -201,6 +201,12 @@ const ManageLocations = () => {
       columnVisibility,
       rowSelection,
     },
+    // Set initial page size to 10 but allow it to grow based on container height
+    initialState: {
+      pagination: {
+        pageSize: Math.max(10, Math.floor((window.innerHeight - 280) / 53)) // 53px is approx height of each row
+      }
+    }
   });
 
   const handleUpdateNDVI = async () => {
@@ -325,7 +331,7 @@ const ManageLocations = () => {
             ))}
           </TableHeader>
         </Table>
-        <ScrollArea className="h-[60dvh]">
+        <ScrollArea className="h-[calc(100dvh-338px)] md:h-[calc(100dvh-280px)]">
           <Table>
             <TableBody>
               {table.getRowModel().rows?.length ? (
