@@ -1,4 +1,3 @@
-import { Home, MapPinCheck, MapPinPlus, Search, Settings, UsersRound } from "lucide-react"
 import logo from "../../assets/images/Landguard_white_logo.png"
 
 import {
@@ -14,41 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Link } from "react-router-dom"
 
-// Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/admin",
-    icon: Home,
-  },
-  {
-    title: "Add Location",
-    url: "/admin/addlocation",
-    icon: MapPinPlus,
-  },
-  {
-    title: "Manage Locations",
-    url: "/admin/managelocations",
-    icon: MapPinCheck,
-  },
-  {
-    title: "Users",
-    url: "/admin/users",
-    icon: UsersRound,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-]
-
-export function AppSidebar() {
+export function AppSidebar({menuLinks}) {
     const { open } = useSidebar()
   return (
     <Sidebar variant="floating" collapsible="icon">
@@ -63,7 +28,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {menuLinks.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size="lg" className={`${open ? "" : "!pl-1"}`}>
                     <Link to={item.url}>

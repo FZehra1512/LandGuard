@@ -13,6 +13,10 @@ import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import AddLocation from "@/pages/Admin/pages/AddLocation";
 import ManageLocations from "@/pages/Admin/pages/ManageLocations";
+import AdminHome from "@/pages/Admin/pages/Home";
+import UserLayout from "@/pages/User";
+import UserProfile from "@/pages/User/pages/Profile";
+import UserDrives from "@/pages/User/pages/UserDrives";
 // TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
 // TODO:/admin should be a protected route, with only admin login 
@@ -34,8 +38,16 @@ const router = createBrowserRouter([
       { path: "admin", 
         element: <AdminLayout />,
         children: [
+          { index: true, element: <AdminHome /> },
           {path: "managelocations", element: <ManageLocations />},
           {path: "addlocation", element: <AddLocation />}
+        ]
+      },
+      { path: "user", 
+        element: <UserLayout />,
+        children: [
+          { index: true, element: <UserProfile /> },
+          {path: "drives", element: <UserDrives />},
         ]
       },
     ],
