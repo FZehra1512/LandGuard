@@ -1,9 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/performCronTask",  
-      "schedule": "0 9 * * 1",         
-      "method": "GET"               
-    }
-  ]
-}
