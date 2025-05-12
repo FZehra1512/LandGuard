@@ -6,11 +6,11 @@ export default async function handler(req, res) {
 
   try {
     // Fetch NDVI data
-    const ndviResult = await fetch(`${process.env.VITE_API_BASE_URL}/api/ndvi/getAll/`);
+    const ndviResult = await fetch(`${process.env.VITE_API_BASE_URL}/ndvi/getAll/`);
     const ndviData = await ndviResult.json();
 
     // Trigger the backend API to post NDVI data
-    const response = await fetch(`${process.env.VITE_API_BASE_URL}/api/facebook/post/`, {
+    const response = await fetch(`${process.env.VITE_API_BASE_URL}/facebook/post/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
