@@ -41,7 +41,7 @@ const Navbar = () => {
           <li><a href="#home">Home</a></li>
           <li><a href="#alerts">Alerts</a></li>
           <li><a href="#features">Features</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><Link to="/contact">Contact</Link></li>
         </ul>
 
         {/* Desktop Buttons */}
@@ -73,7 +73,7 @@ const Navbar = () => {
           <li><a href="#home" onClick={() => setIsMenuOpen(false)}>Home</a></li>
           <li><a href="#alerts" onClick={() => setIsMenuOpen(false)}>Alerts</a></li>
           <li><a href="#features" onClick={() => setIsMenuOpen(false)}>Features</a></li>
-          <li><a href="#contact" onClick={() => setIsMenuOpen(false)}>Contact</a></li>
+          <li><Link to="/contact">Contact</Link></li>
         </ul>
 
         {/* Mobile Buttons */}

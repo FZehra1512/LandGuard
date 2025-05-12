@@ -17,10 +17,12 @@ import AdminHome from "@/pages/Admin/pages/Home";
 import UserLayout from "@/pages/User";
 import UserProfile from "@/pages/User/pages/Profile";
 import UserDrives from "@/pages/User/pages/UserDrives";
+import ContactPage from "@/pages/Contact";
 // TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
 // TODO:/admin should be a protected route, with only admin login 
 // TODO: The app loads on each route idk why?
+//TODO: Scroll to top
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,6 +37,7 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
+      { path: "contact", element: <ContactPage /> },
       { path: "admin", 
         element: <AdminLayout />,
         children: [

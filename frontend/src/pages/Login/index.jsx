@@ -1,6 +1,6 @@
 import LoginForm from "@/components/LoginForm";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/Landguard_logo.png";
+import logo from "@/assets/images/Landguard_logo.png";
 
 const Login = () => {
   return (

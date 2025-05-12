@@ -80,7 +80,7 @@ const UserProfile = () => {
             />
             <Label
               htmlFor="avatar-upload"
-              className="absolute bottom-0 right-[14%] bg-primary text-primary-foreground rounded-full p-1 cursor-pointer hover:bg-[#0F6B4E]"
+              className="absolute bottom-0 right-[14%] bg-primary text-primary-foreground rounded-full p-1 cursor-pointer hover:bg-primaryDark"
             >
               {isEditing ? (
                 <Pen className="h-6 w-6" />
