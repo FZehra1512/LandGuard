@@ -18,41 +18,28 @@ const dummyDrives = [
     title: "Plantation at City Park",
     location: "Karachi, Pakistan",
     date: "2025-05-10",
+    dateTime: "2025-05-10T09:00:00Z",
     participants: 50,
     capacity: 50,
     status: "active",
-    createdAt: "2025-04-15T10:00:00Z", 
+    createdAt: "2025-04-15T10:00:00Z",
+    joinedUsers: ["sana@example.com", "ali@gmail.com"],
+    organizerName: "Green Earth Org",
+    contact: "1032782631"
   },
   {
     id: 2,
     title: "Beach Cleanup & Planting",
     location: "Clifton Beach, Karachi",
     date: "2025-05-15",
+    dateTime: "2025-05-15T15:00:00Z",
     participants: 18,
     capacity: 30,
-    status: "active", 
+    status: "active",
     createdAt: "2025-04-20T14:30:00Z",
-  },
- 
-  {
-    id: 6,
-    title: "Forest Preservation Campaign",
-    location: "Islamabad, Pakistan",
-    date: "2025-08-10",
-    participants: 40,
-    capacity: 75,
-    status: "active",
-    createdAt: "2025-04-10T09:30:00Z",
-  },
-  {
-    id: 7,
-    title: "Tree Planting in Rural Areas",
-    location: "Lahore, Pakistan",
-    date: "2025-06-30",
-    participants: 100,
-    capacity: 150,
-    status: "active",
-    createdAt: "2025-04-27T07:45:00Z",
+    joinedUsers: ["fatima@ngo.org", "zainab@hotmail.com"],
+    organizerName: "Ocean Friends",
+    contact: "0333333002"
   },
 ];
 
@@ -62,6 +49,18 @@ export default function DrivesPage() {
   const [isCreatingDrive, setIsCreatingDrive] = useState(false);
   const [drives, setDrives] = useState([]);
   const [loading, setLoading] = useState(true); 
+
+  const refreshDrives = async () => {
+  setLoading(true);
+  const response = await getDrives();
+  if (response.code === 200) {
+    setDrives(response.data); 
+  } else {
+    console.error("Failed to fetch drives:", response.data);
+  }
+  setLoading(false);
+};
+
 
   useEffect(() => {
     const fetchDrives = async () => {
@@ -115,7 +114,8 @@ export default function DrivesPage() {
               <p className="text-gray-500 mb-8 text-center">
                 Fill in the details below to organize your drive and invite people to join!
               </p>
-              <DriveCreationForm />
+              {/* <DriveCreationForm /> */}
+              <DriveCreationForm onSuccess={refreshDrives} />
             </div>
           </motion.div>
         )}
@@ -126,8 +126,10 @@ export default function DrivesPage() {
         <div className="flex flex-col gap-6">
           {loading ? (
             <p>Loading drives...</p>
+          ) : drives.length === 0 ? (
+            <p className="text-gray-600 text-center">No drives available at the moment.</p>
           ) : (
-            dummyDrives.map((drive) => (
+            drives.map((drive) => (
               <DriveCard key={drive.id} drive={drive} />
             ))
           )}
