@@ -11,9 +11,10 @@ import * as z from "zod";
 import { toast } from "@/hooks/use-toast";
 import TermsOfService from "@/components/TermsOfService";
 import PrivacyPolicy from "@/components/PrivacyPolicy";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "@/components/Auth/GoogleAuthButton";
-import axios from "axios";
+import { loginUser } from "@/api/authEndpoints";
+import { useAuth } from "@/providers/AuthProvider";
 
 const formSchema = z.object({
   email: z
@@ -34,6 +35,8 @@ const formSchema = z.object({
 
 const LoginForm = ({ className, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { setIsUser, setUserDetails } = useAuth();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,19 +60,47 @@ const LoginForm = ({ className, ...props }) => {
 
   const onSubmit = async (data) => {
     try {
-      // TODO: Implement actual login logic here
-      console.log(data);
-
-      toast({
-        variant: "success",
-        title: "Success",
-        description: `Logged in successfully with ${data.email} and ${data.password}`,
-      });
+      const payload = {
+        email: data.email,
+        password: data.password,
+      }
+      const response = await loginUser(payload);
+      if (response.code === 200) {
+        localStorage.setItem("landGuardtoken", response.data.access);
+        localStorage.setItem("landGuardRefreshtoken", response.data.refresh);
+        
+        // Set authentication state
+        setIsUser(true);
+        setUserDetails(response.data.user);
+        
+        toast({
+          variant: "success",
+          title: "Success",
+          description: "Logged in successfully.",
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      } else if (response.code === 401) {
+        if (response.data.error) {
+          toast({
+            variant: "warning",
+            title: "Error",
+            description: response.data.error,
+          });
+        } 
+      } else {
+        toast({
+          variant: "warning",
+          title: "Error",
+          description: "Failed to Login",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "Failed to login",
+        description: "Failed to login",
       });
     } finally {
       form.reset()

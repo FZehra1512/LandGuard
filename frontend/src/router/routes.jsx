@@ -20,10 +20,10 @@ import UserLayout from "@/pages/User";
 import UserProfile from "@/pages/User/pages/Profile";
 import UserDrives from "@/pages/User/pages/UserDrives";
 import ContactPage from "@/pages/Contact";
+import ProtectedRoute from "./protectedRoutes";
 
 // TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
-// TODO:/admin should be a protected route, with only admin login 
 // TODO: The app loads on each route idk why?
 
 const ScrollToTop = () => {
@@ -59,19 +59,31 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
       { path: "contact", element: <ContactPage /> },
-      { path: "admin", 
-        element: <AdminLayout />,
+      { 
+        path: "admin",
+        element: <ProtectedRoute allowedRole="admin" />,
         children: [
-          { index: true, element: <AdminHome /> },
-          {path: "managelocations", element: <ManageLocations />},
-          {path: "addlocation", element: <AddLocation />}
+          { 
+            element: <AdminLayout />,
+            children: [
+              { index: true, element: <AdminHome /> },
+              { path: "managelocations", element: <ManageLocations /> },
+              { path: "addlocation", element: <AddLocation /> }
+            ]
+          }
         ]
       },
-      { path: "user", 
-        element: <UserLayout />,
+      { 
+        path: "user",
+        element: <ProtectedRoute allowedRole="user" />,
         children: [
-          { index: true, element: <UserProfile /> },
-          {path: "drives", element: <UserDrives />},
+          {
+            element: <UserLayout />,
+            children: [
+              { index: true, element: <UserProfile /> },
+              { path: "drives", element: <UserDrives /> }
+            ]
+          }
         ]
       },
     ],
