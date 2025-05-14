@@ -7,11 +7,13 @@ import image1 from "@/assets/images/plant_bg1.png";
 import image2 from "@/assets/images/contact_page_img.png";
 import logo from "../../assets/images/Landguard_logo.png";
 import { getPosts } from "@/api/SocialDataEndpoints";
-
+import { useAuth } from "@/providers/AuthProvider";
 
 const dummyPosts = [
   {
     id: 1,
+    username: "Sana Maryam",
+    contact: "012787t24",
     title: "Empty Garden Behind House",
     description: "A good-sized garden area that could host 10–15 plants.",
     location: {
@@ -23,6 +25,8 @@ const dummyPosts = [
   },
   {
     id: 2,
+    username: "Sana Maryam",
+    contact: "012787t24",
     title: "Vacant Plot Near Gulshan",
     description: "Unused land available for plantation initiatives.",
     location: {
@@ -37,21 +41,8 @@ const dummyPosts = [
 
 export default function SocialPostsPage() {
 
-  const [posts, setPosts] = useState([]); //use this instead of dummyposts afterwards
-
-  // useEffect(() => {
-  //   // Fetch posts from the backend when the component mounts
-  //   const getPostsFromBackend = async () => {
-  //     try {
-  //       const { data } = await getPosts();  // Fetch the posts from the API
-  //       setPosts(data);  // Assuming the data is an array of posts
-  //     } catch (error) {
-  //       console.error("Error fetching posts:", error);
-  //     }
-  //   };
-    
-  //   getPostsFromBackend();  // Call the function to fetch posts
-  // }, []);
+  const [posts, setPosts] = useState([]);
+  const { userDetails } = useAuth();
 
   useEffect(() => {
   const getPostsFromBackend = async () => {
@@ -87,7 +78,6 @@ export default function SocialPostsPage() {
 }, []);
 
 
-
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
@@ -111,7 +101,7 @@ export default function SocialPostsPage() {
           <p className="text-lg mb-6 max-w-2xl mx-auto">
             Explore and share locations that are suitable for tree plantation.
           </p>
-          <Link to="/create-post">
+        <Link to="/create-post">
             <Button
               variant="default"
               size="lg"

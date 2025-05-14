@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "@/hooks/use-toast";
 import { createDrive } from "@/api/SocialDataEndpoints"; 
+import { useAuth } from "@/providers/AuthProvider";
 
 const phoneRegex = /^03[0-9]{9}$/;
 
@@ -30,6 +31,7 @@ const formSchema = z.object({
   
 
 const DriveCreationForm = ({ onSuccess, className, ...props }) => {
+  const { userDetails } = useAuth()
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,7 +40,7 @@ const DriveCreationForm = ({ onSuccess, className, ...props }) => {
       dateTime: "",
       description: "",
       capacity: 1,
-      organizerName: "",
+      organizerName: userDetails?.username || "",
       contact: "", 
     },
   });
@@ -51,6 +53,7 @@ const DriveCreationForm = ({ onSuccess, className, ...props }) => {
       dateTime: new Date(data.dateTime).toISOString(),
       status: "pending",
       participants: 1,
+      joinedUsers: [userDetails?.email],
       createdAt: new Date().toISOString(),
     };
 
@@ -166,7 +169,7 @@ const DriveCreationForm = ({ onSuccess, className, ...props }) => {
               )}
             </div>
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="organizerName">Organizer Name</Label>
               <Input
                 id="organizerName"
@@ -179,7 +182,7 @@ const DriveCreationForm = ({ onSuccess, className, ...props }) => {
                   {form.formState.errors.organizerName.message}
                 </p>
               )}
-            </div>
+            </div> */}
 
             <div className="grid gap-2">
             <Label htmlFor="contact">Contact Number</Label>

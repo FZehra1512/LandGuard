@@ -57,6 +57,7 @@ const LocationPicker = ({ markerPos, setMarkerPos, onLocationSelect }) => {
 
 const CreatePost = () => {
   const [markerPos, setMarkerPos] = useState([24.8607, 67.0011]);
+  const { userDetails } = useAuth();
 
   const {
     register,
@@ -64,6 +65,7 @@ const CreatePost = () => {
     setValue,
     watch,
     formState: { errors },
+    reset
   } = useForm({
     resolver: zodResolver(postSchema),
     defaultValues: {
@@ -77,6 +79,7 @@ const CreatePost = () => {
 
   const onSubmit = async (data) => {
     const formData = new FormData();
+    formData.append('username', userDetails.username);
     formData.append('title', data.title);
     formData.append('location', data.location);
     formData.append('contact', data.contact);
@@ -92,6 +95,7 @@ const CreatePost = () => {
         title: "Success",
         description: "Post submitted successfully",
       });
+      reset();
     } else {
       toast({
         variant: "destructive",

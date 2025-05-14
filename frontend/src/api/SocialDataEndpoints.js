@@ -48,3 +48,14 @@ export const createLandPost = async (formData) => {
       };
     }
   };
+
+
+export const joinDrive = async (driveId) => {
+  try {
+    const response = await api.post(`/drives/${driveId}/join`);
+    return response.data;
+  } catch (error) {
+    console.error("Join drive error:", error.response?.data || error.message);
+    throw error.response?.data || error;
+  }
+};
