@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import logo from "@/assets/images/Landguard_logo.png";
 import { Facebook, Instagram, Mail } from "lucide-react";
+import { useAuth } from "@/providers/AuthProvider";
 //TODO: Add inta link
 const Footer = () => {
+  const { isUser, userDetails } = useAuth();
+  
   return (
     <footer className="bg-background border-t w-full">
       <div className="w-full">
@@ -65,9 +68,18 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/signup" className="text-sm text-muted-foreground hover:text-primary">
-                  Create an account
-                </Link>
+                {isUser ? (
+                  <Link 
+                    to={userDetails.userType === "admin" ? "/admin" : "/user"} 
+                    className="text-sm text-muted-foreground hover:text-primary"
+                  >
+                    Profile
+                  </Link>
+                ) : (
+                  <Link to="/signup" className="text-sm text-muted-foreground hover:text-primary">
+                    Create an account
+                  </Link>
+                )}
               </li>
             </ul>
           </div>
