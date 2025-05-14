@@ -14,6 +14,7 @@ import PrivacyPolicy from "@/components/PrivacyPolicy";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "@/components/Auth/GoogleAuthButton";
 import { signUpUser } from "@/api/authEndpoints";
+import { useAuth } from "@/providers/AuthProvider";
 
 const formSchema = z.object({
   username: z
