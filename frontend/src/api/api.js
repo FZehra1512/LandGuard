@@ -15,10 +15,3 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
-
-// TODO: remove these USAGE HELP lines once the component is used
-// const res = await api.get('/user')
-// const res = await api.post('/posts', {
-//     title: 'My Post',
-//     content: 'Hello World',
-//   });

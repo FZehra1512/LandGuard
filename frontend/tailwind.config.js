@@ -7,6 +7,7 @@ export default {
   		colors: {
   			darkColor: '#0B2C24',
   			primaryColor: '#127C5A',
+			primaryDark: '#0F6B4E',
   			compColor: '#F0B556',
   			secColor: '#8CD29D',
   			lightColor: '#FEF7EC',

@@ -26,8 +26,7 @@ const TermsOfService = () => {
         <ScrollArea className="h-[70vh] pr-4">
           <div className="space-y-6 py-6">
             <p className="text-sm text-foreground">
-                {/* TODO: Add a legit link to languard website*/}
-              Welcome to Landguard! By accessing or using our website (www.landguard.io) or any of our services, 
+              Welcome to Landguard! By accessing or using our website or any of our services, 
               you agree to be bound by these Terms of Service. Please read them carefully.
             </p>
 
@@ -97,9 +96,11 @@ const TermsOfService = () => {
               <p className="text-sm text-foreground">
                 If you have any questions about these Terms, please contact us at:
                 <br />
-                {/* TODO: Add email */}
-                <a href="mailto:info@landguard.io" className="text-primary hover:underline">
-                  info@landguard.io
+                <a
+                  href="mailto:landguardinfo@gmail.com"
+                  className="text-primary hover:underline"
+                >
+                  landguardinfo@gmail.com
                 </a>
               </p>
             </section>

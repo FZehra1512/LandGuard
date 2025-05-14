@@ -1,4 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Home from "@/pages/Home";
 import SocialPostsPage from "@/pages/Social";
 import NotFound from "@/pages/NotFound";
@@ -13,14 +15,39 @@ import Login from "@/pages/Login";
 import SignUp from "@/pages/SignUp";
 import AddLocation from "@/pages/Admin/pages/AddLocation";
 import ManageLocations from "@/pages/Admin/pages/ManageLocations";
+import AdminHome from "@/pages/Admin/pages/Home";
+import UserLayout from "@/pages/User";
+import UserProfile from "@/pages/User/pages/Profile";
+import UserDrives from "@/pages/User/pages/UserDrives";
+import ContactPage from "@/pages/Contact";
+
 // TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
 // TODO:/admin should be a protected route, with only admin login 
 // TODO: The app loads on each route idk why?
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }, [pathname]);
+
+  return null;
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Wrap pages in a common layout
+    element: (
+      <>
+        <ScrollToTop />
+        <Layout />
+      </>
+    ),
     children: [
       { index: true, element: <Home /> }, // Default route
       { path: "greeneryDashboard", element: <GreeneryDashboard /> },
@@ -31,11 +58,20 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "signup", element: <SignUp /> },
       { path: "create-post", element: <CreatePost /> },
+      { path: "contact", element: <ContactPage /> },
       { path: "admin", 
         element: <AdminLayout />,
         children: [
+          { index: true, element: <AdminHome /> },
           {path: "managelocations", element: <ManageLocations />},
           {path: "addlocation", element: <AddLocation />}
+        ]
+      },
+      { path: "user", 
+        element: <UserLayout />,
+        children: [
+          { index: true, element: <UserProfile /> },
+          {path: "drives", element: <UserDrives />},
         ]
       },
     ],
