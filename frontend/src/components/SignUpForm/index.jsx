@@ -11,9 +11,10 @@ import * as z from "zod";
 import { toast } from "@/hooks/use-toast";
 import TermsOfService from "@/components/TermsOfService";
 import PrivacyPolicy from "@/components/PrivacyPolicy";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "@/components/Auth/GoogleAuthButton";
-import axios from "axios";
+import { signUpUser } from "@/api/authEndpoints";
+import { useAuth } from "@/providers/AuthProvider";
 
 const formSchema = z.object({
   username: z
@@ -51,6 +52,8 @@ const handleGoogleSignUp = async (googleToken) => {
 
 const SignUpForm = ({ className, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { setIsUser, setUserDetails } = useAuth();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,22 +65,58 @@ const SignUpForm = ({ className, ...props }) => {
 
   const onSubmit = async (data) => {
     try {
-      // TODO: Implement actual SignUp logic here
-      console.log(data);
+      const payload = {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      };
+      const res = await signUpUser(payload);
+      if (res.code === 201) {
+        localStorage.setItem("landGuardtoken", res.data.access);
+        localStorage.setItem("landGuardRefreshtoken", res.data.refresh);
 
-      toast({
-        variant: "success",
-        title: "Success",
-        description: `Signed up successfully with username: ${data.username}, email: ${data.email}`,
-      });
+        // Set authentication state
+        setIsUser(true);
+        setUserDetails(res.data.user);
+
+        toast({
+          variant: "success",
+          title: "Success",
+          description: "Signed up successfully.",
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      } else if (res.code === 400) {
+        const errorData = res.data;
+        if (errorData.email) {
+          toast({
+            variant: "warning",
+            title: "Email Error",
+            description: errorData.email,
+          });
+        } else if (errorData.username) {
+          toast({
+            variant: "warning",
+            title: "Username Error",
+            description: errorData.username,
+          });
+        }
+      } else {
+        toast({
+          variant: "warning",
+          title: "Error",
+          description: "Failed to Sign Up",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "Failed to Sign Up",
+        description: "Failed to Sign Up",
       });
     } finally {
-      form.reset()
+      form.reset();
     }
   };
 

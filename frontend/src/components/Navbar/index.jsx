@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import logo from "../../assets/images/Landguard_logo.png";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react"; // Import icons
+import { Menu, X, User2 } from "lucide-react"; // Import icons
 import { Link } from "react-router-dom";
+import { useAuth } from "@/providers/AuthProvider";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isUser, userDetails } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,14 +46,24 @@ const Navbar = () => {
           <li><Link to="/contact">Contact</Link></li>
         </ul>
 
-        {/* Desktop Buttons */}
+        {/* Desktop Buttons/Profile */}
         <div className="hidden lg:block space-x-8">
-          <Link to="/login">
-            <Button size="lg">Login</Button>
-          </Link>
-          <Link to="/signup">
-            <Button variant="outline" size="lg">Sign Up</Button>
-          </Link>
+          {isUser && userDetails ? (
+            <Link to={userDetails.userType === 'admin' ? '/admin' : '/user'}>
+              <Button size="icon" className="rounded-full w-11 h-11 text-xl text-background font-semibold">
+                {userDetails.username?.charAt(0).toUpperCase()}
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button size="lg">Login</Button>
+              </Link>
+              <Link to="/signup">
+                <Button variant="outline" size="lg">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -76,14 +88,25 @@ const Navbar = () => {
           <li><Link to="/contact">Contact</Link></li>
         </ul>
 
-        {/* Mobile Buttons */}
+        {/* Mobile Buttons/Profile */}
         <div className="flex flex-col items-center space-y-4 py-4">
-          <Link to="/login" className="w-2/3">
-            <Button size="lg" className="w-full">Login</Button>
-          </Link>
-          <Link to="/signup" className="w-2/3">
-            <Button variant="outline" size="lg" className="w-full">Sign Up</Button>
-          </Link>
+          {isUser && userDetails ? (
+            <Link to={userDetails.role === 'admin' ? '/admin' : '/user'} className="w-2/3">
+              <Button size="lg" className="w-full flex items-center justify-center gap-2">
+                <User2 size={20} />
+                Profile
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="w-2/3">
+                <Button size="lg" className="w-full">Login</Button>
+              </Link>
+              <Link to="/signup" className="w-2/3">
+                <Button variant="outline" size="lg" className="w-full">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>

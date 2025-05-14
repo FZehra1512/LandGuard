@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Link } from "react-router-dom"
 
-export function AppSidebar({menuLinks}) {
+export function AppSidebar({menuLinks, openLogoutDialog}) {
     const { open } = useSidebar()
   return (
     <Sidebar variant="floating" collapsible="icon">
@@ -31,10 +31,17 @@ export function AppSidebar({menuLinks}) {
               {menuLinks.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size="lg" className={`${open ? "" : "!pl-1"}`}>
-                    <Link to={item.url}>
-                      <item.icon style={{width: "22px", height: "22px"}}/>
-                      <span className="pl-4 text-base">{item.title}</span>
-                    </Link>
+                    {item.title === "Logout" ? (
+                      <div onClick={openLogoutDialog} className="cursor-pointer">
+                        <item.icon style={{width: "22px", height: "22px"}}/>
+                        <span className="pl-4 text-base">{item.title}</span>
+                      </div>
+                    ) : (
+                      <Link to={item.url}>
+                        <item.icon style={{width: "22px", height: "22px"}}/>
+                        <span className="pl-4 text-base">{item.title}</span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
