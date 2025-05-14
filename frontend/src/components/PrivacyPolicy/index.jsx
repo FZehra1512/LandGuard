@@ -99,9 +99,11 @@ const PrivacyPolicy = () => {
               <p className="text-sm text-foreground">
                 For any privacy-related concerns, contact:
                 <br />
-                {/* TODO: Add email */}
-                <a href="mailto:privacy@landguard.io" className="text-primary hover:underline">
-                  privacy@landguard.io
+                <a
+                  href="mailto:landguardinfo@gmail.com"
+                  className="text-primary hover:underline"
+                >
+                  landguardinfo@gmail.com
                 </a>
               </p>
             </section>

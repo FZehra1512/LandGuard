@@ -120,18 +120,18 @@ export const columns = [
   },
   {
     accessorKey: "fromDate",
-    header: () => <div className="w-20 text-right">From Date</div>,
+    header: () => <div className="w-[5.5rem] text-right">From Date</div>,
     cell: ({ row }) => {
       const fDate = formatDate(row.getValue("fromDate"));
-      return <div className="w-20 text-right font-medium">{fDate}</div>;
+      return <div className="w-[5.5rem] text-right font-medium">{fDate}</div>;
     },
   },
   {
     accessorKey: "toDate",
-    header: () => <div className="w-20 text-right">To Date</div>,
+    header: () => <div className="w-[5.5rem] text-right">To Date</div>,
     cell: ({ row }) => {
       const tDate = formatDate(row.getValue("toDate"));
-      return <div className="w-20 text-right font-medium">{tDate}</div>;
+      return <div className="w-[5.5rem] text-right font-medium">{tDate}</div>;
     },
   },
   {
@@ -208,6 +208,7 @@ const ManageLocations = () => {
       }
     }
   });
+  console.log("ndviPolygons", ndviPolygons);
 
   const handleUpdateNDVI = async () => {
     try {
@@ -231,19 +232,46 @@ const ManageLocations = () => {
       };
       const apiresponse = await updateNDVIData(payload);
       if (apiresponse.code === 200) {
-        const { code, data } = await getNDVIData();
-        if (code === 200 && data?.length) {
-          const formatted = formatNDVIData(data);
-          setNdviPolygons(formatted);
-          toast({
-            variant: "success",
-            title: "Success",
-            description: `Locations updated successfully!`,
+        // Format the updated data first
+        const formattedUpdates = formatNDVIData(apiresponse.data.results);
+        console.log("formattedUpdates", formattedUpdates);
+        
+        setNdviPolygons((prevPolygons) => {
+          const updatedPolygons = [...prevPolygons];
+          
+          // Create a map of existing polygons for faster lookup
+          const polygonMap = new Map(
+            prevPolygons.map(p => [`${p.name}-${p.area}`, p])
+          );
+          
+          // Update only the changed polygons
+          formattedUpdates.forEach(updated => {
+            const key = `${updated.name}-${updated.area}`;
+            const existingPolygon = polygonMap.get(key);
+            
+            if (existingPolygon) {
+              const index = updatedPolygons.findIndex(
+                p => p.name === updated.name && p.area === updated.area
+              );
+              if (index !== -1) {
+                updatedPolygons[index] = {
+                  ...updated,
+                };
+              }
+            }
           });
-          // Clear all selected rows
-          setRowSelection({});
-          setIsSubmitting(false);
-        }
+
+          return updatedPolygons;
+        });
+
+        toast({
+          variant: "success",
+          title: "Success",
+          description: `Locations updated successfully!`,
+        });
+
+        setRowSelection({});
+        setIsSubmitting(false);
       }
     } catch (error) {
       toast({

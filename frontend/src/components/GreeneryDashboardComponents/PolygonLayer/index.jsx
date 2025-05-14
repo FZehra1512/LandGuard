@@ -8,8 +8,8 @@ import MobileDrawer from "@/components/ui/mobile-drawer";
 
 //TODO:values used are just for testing now, NOT FINALIZED YET
 const getColorByNDVI = (ndvi) => {
-  if (ndvi > 0.6) return "green"; // High vegetation
-  if (ndvi > 0.3) return "yellow"; // Moderate vegetation
+  if (ndvi > 0.7) return "green"; // High vegetation
+  if (ndvi > 0.5) return "yellow"; // Moderate vegetation
   return "red"; // Low vegetation
 };
 

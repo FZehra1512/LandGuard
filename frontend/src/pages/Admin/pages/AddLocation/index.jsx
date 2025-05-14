@@ -56,30 +56,44 @@ const AddLocation = () => {
 
     try {
       setIsSubmitting(true);
-      // TODO: Add Multiple locations
       const payload = {
-        area: newLocations[0].area,
-        place_name: newLocations[0].placeName,
-        coordinates: [newLocations[0].coordinates],
+        locations: newLocations.map((location) => ({
+          area: location.area,
+          place_name: location.placeName,
+          coordinates: [location.coordinates],
+        })),
       };
 
       const apiResponse = await addLocation(payload);
       if (apiResponse.code === 201) {
-        const { code, data } = await getNDVIData();
-        if (code === 200 && data?.length) {
-          const formatted = formatNDVIData(data);
-          setNdviPolygons(formatted);
+        const insertedDocs = apiResponse.data
+          .filter((r) => r.status === "Inserted")
+          .map((r) => r.doc);
+        const failedDocs = apiResponse.data.filter(
+          (r) => r.status !== "Inserted"
+        );
+
+        // Format and update polygons
+        const formattedNew = formatNDVIData(insertedDocs);
+        setNdviPolygons((prev) => [...prev, ...formattedNew]);
+
+        if (insertedDocs.length > 0) {
           toast({
             variant: "success",
             title: "Success",
             description: `Locations saved successfully!`,
           });
-
-          featureGroupRef.current.clearLayers();
-          setNewLocations([]);
-          setDrawMode(false);
-          layerRefs.current = {};
-          polygonDataRef.current = {};
+        }
+        // Show error for failed ones
+        if (failedDocs.length > 0) {
+          failedDocs.forEach((failure) => {
+            const name = failure?.doc?.place_name || "Unknown location";
+            toast({
+              variant: "destructive",
+              title: "Error",
+              description: `Failed to add location ${name}!`,
+            });
+          });
         }
       }
     } catch (error) {
@@ -91,6 +105,11 @@ const AddLocation = () => {
       });
     } finally {
       setIsSubmitting(false);
+      // featureGroupRef.current.clearLayers();
+      setNewLocations([]);
+      setDrawMode(false);
+      layerRefs.current = {};
+      polygonDataRef.current = {};
     }
   }, [newLocations]);
 
@@ -303,7 +322,9 @@ const AddLocation = () => {
         <ScaleControl position="topright" />
         <SearchBox setSearchLocation={setSearchLocation} />
         <LocateButton position="topright" setUserLocation={setSearchLocation} />
-        {searchLocation && <Marker position={searchLocation} icon={locateIcon}/>}
+        {searchLocation && (
+          <Marker position={searchLocation} icon={locateIcon} />
+        )}
 
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
