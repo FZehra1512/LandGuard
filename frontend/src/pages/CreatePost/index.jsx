@@ -28,13 +28,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
+const phoneRegex = /^03[0-9]{9}$/;
+
 // Schema
 const postSchema = z.object({
   title: z.string().min(3),
   location: z.string().nonempty("Location is required"),
   description: z.string().min(10),
-  image: z.instanceof(File).optional(),
+  contact: z
+      .string()
+      .regex(phoneRegex, "Enter a valid Pakistani number (e.g., 03XXXXXXXXX)"),
+  image: z.instanceof(File, { message: "Image is required" }),
 });
+
 
 const LocationPicker = ({ markerPos, setMarkerPos, onLocationSelect }) => {
   useMapEvents({
@@ -64,6 +70,7 @@ const CreatePost = () => {
       title: '',
       location: '',
       description: '',
+      contact: '',
       image: undefined,
     },
   });
@@ -72,6 +79,7 @@ const CreatePost = () => {
     const formData = new FormData();
     formData.append('title', data.title);
     formData.append('location', data.location);
+    formData.append('contact', data.contact);
     formData.append('description', data.description);
     if (data.image) {
       formData.append('image', data.image);
@@ -88,7 +96,7 @@ const CreatePost = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: res.message || "Error submitting post",
+        description: res.data?.message || "Error submitting post",
       });
     }
   };
@@ -150,6 +158,14 @@ const CreatePost = () => {
             </div>
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>}
           </div>
+
+          {/* Contact */}
+          <div>
+            <label className="block text-sm font-semibold mb-1">Contact Information</label>
+            <Input {...register("contact")} placeholder="Phone number or email" />
+            {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>}
+          </div>
+
 
           {/* Description */}
           <div>

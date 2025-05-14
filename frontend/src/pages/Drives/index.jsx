@@ -63,6 +63,18 @@ export default function DrivesPage() {
   const [drives, setDrives] = useState([]);
   const [loading, setLoading] = useState(true); 
 
+  const refreshDrives = async () => {
+  setLoading(true);
+  const response = await getDrives();
+  if (response.code === 200) {
+    setDrives(response.data); 
+  } else {
+    console.error("Failed to fetch drives:", response.data);
+  }
+  setLoading(false);
+};
+
+
   useEffect(() => {
     const fetchDrives = async () => {
       setLoading(true);
@@ -115,7 +127,8 @@ export default function DrivesPage() {
               <p className="text-gray-500 mb-8 text-center">
                 Fill in the details below to organize your drive and invite people to join!
               </p>
-              <DriveCreationForm />
+              {/* <DriveCreationForm /> */}
+              <DriveCreationForm onSuccess={refreshDrives} />
             </div>
           </motion.div>
         )}
@@ -126,8 +139,10 @@ export default function DrivesPage() {
         <div className="flex flex-col gap-6">
           {loading ? (
             <p>Loading drives...</p>
+          ) : drives.length === 0 ? (
+            <p className="text-gray-600 text-center">No drives available at the moment.</p>
           ) : (
-            dummyDrives.map((drive) => (
+            drives.map((drive) => (
               <DriveCard key={drive.id} drive={drive} />
             ))
           )}
