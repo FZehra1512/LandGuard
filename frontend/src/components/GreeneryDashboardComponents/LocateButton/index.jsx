@@ -2,7 +2,7 @@ import { useMap } from "react-leaflet";
 import { LocateFixedIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { POSITION_CLASSES } from "../Minimap";
+import { POSITION_CLASSES } from "@/components/GreeneryDashboardComponents/Minimap";
 
 const LocateButton = ({ position, setUserLocation }) => {
   const map = useMap();
