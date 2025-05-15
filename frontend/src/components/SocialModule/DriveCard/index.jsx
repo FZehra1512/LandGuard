@@ -11,24 +11,54 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { useAuth } from "@/providers/AuthProvider";
+import { toast } from "@/hooks/use-toast";
+import { joinDrive } from "@/api/SocialDataEndpoints";
 
 export default function DriveCard({ drive }) {
-  const { title, location, date, participants, capacity } = drive;
+  const {
+    title,
+    location,
+    dateTime,
+    participants = [],
+    capacity,
+    organizerName,
+    contact,
+  } = drive;
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { userDetails } = useAuth();
 
-  const progress = Math.min((participants / capacity) * 100, 100);
-  const isFull = participants >= capacity;
+  const participantsCount = participants.length;
+  const progress = Math.min((participantsCount / capacity) * 100, 100);
+  const isFull = participantsCount >= capacity;
+  // const alreadyJoined = participants.includes(userDetails?.email);
+  const alreadyJoined = false;
 
-  const handleConfirmJoin = () => {
-    setDialogOpen(false);
-    // You can add your join logic here, like API call
-    console.log("User confirmed join!");
+  
+
+  const handleConfirmJoin = async () => {
+    try {
+      await joinDrive(drive._id); // API call to backend to join
+
+      toast({
+        variant: "success",
+        title: "Joined!",
+        description: "You’ve successfully joined this drive 🌱",
+      });
+
+      setDialogOpen(false);
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Join",
+        description: err.message || "Something went wrong",
+      });
+    }
   };
 
   return (
     <div className="relative overflow-hidden bg-white p-6 rounded-2xl shadow-lg flex flex-col gap-5 transition hover:shadow-xl group">
-
       {/* Decorative Ribbon */}
       <div className="absolute top-0 left-0 bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-br-xl">
         🌱 Plantation Drive
@@ -43,7 +73,15 @@ export default function DriveCard({ drive }) {
           📍 <span>{location}</span>
         </div>
         <div className="text-gray-600 text-sm flex items-center gap-1">
-          📅 <span>{new Date(date).toDateString()}</span>
+          📅 <span>{new Date(dateTime).toDateString()}</span>
+        </div>
+
+        {/* Organizer Info */}
+        <div className="text-gray-600 text-sm mb-1 mt-2 flex items-center gap-1">
+          👤 <span>Organizer: {organizerName}</span>
+        </div>
+        <div className="text-gray-600 text-sm flex items-center gap-1">
+          📞 <span>Contact: {contact}</span>
         </div>
       </div>
 
@@ -57,7 +95,9 @@ export default function DriveCard({ drive }) {
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <div className="text-xs text-gray-500">{participants} out of {capacity} participants joined!</div>
+          <div className="text-xs text-gray-500">
+            {participantsCount} out of {capacity} participants joined!
+          </div>
         </div>
 
         {/* Join Button with Dialog */}
@@ -66,10 +106,10 @@ export default function DriveCard({ drive }) {
             <Button
               variant="default"
               size="lg"
-              disabled={isFull}
+              disabled={isFull || alreadyJoined}
               onClick={() => setDialogOpen(true)}
             >
-              {isFull ? "Full" : "Join"}
+              {isFull ? "Full" : alreadyJoined ? "Joined" : "Join"}
             </Button>
           </DialogTrigger>
 
@@ -84,9 +124,7 @@ export default function DriveCard({ drive }) {
               <Button variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleConfirmJoin}>
-                Confirm
-              </Button>
+              <Button onClick={handleConfirmJoin}>Confirm</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

@@ -38,18 +38,10 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <ul className="hidden lg:flex w-1/3 justify-between text-xl font-medium">
-          <li>
-            <a href="#home">Home</a>
-          </li>
-          <li>
-            <a href="#alerts">Alerts</a>
-          </li>
-          <li>
-            <a href="#features">Features</a>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#alerts">Alerts</a></li>
+          <li><Link to="/story">Our Story</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
         </ul>
 
         {/* Desktop Buttons/Profile */}
@@ -105,8 +97,8 @@ const Navbar = () => {
               </a>
             </li>
             <li>
-              <a href="#features" onClick={() => setIsMenuOpen(false)}>
-                Features
+              <a href="/story" onClick={() => setIsMenuOpen(false)}>
+                Our Story
               </a>
             </li>
             <li>

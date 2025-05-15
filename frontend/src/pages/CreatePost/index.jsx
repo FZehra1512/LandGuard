@@ -19,6 +19,7 @@ import Navbar from '@/components/Navbar';
 import { createLandPost } from '@/api/SocialDataEndpoints';
 import SearchBox from '@/components/SocialModule/FormSearch';
 import 'leaflet/dist/leaflet.css';
+import { useAuth } from '@/providers/AuthProvider';
 
 // Fix leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -28,13 +29,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
 });
 
+const phoneRegex = /^03[0-9]{9}$/;
+
 // Schema
 const postSchema = z.object({
   title: z.string().min(3),
   location: z.string().nonempty("Location is required"),
   description: z.string().min(10),
-  image: z.instanceof(File).optional(),
+  contact: z
+      .string()
+      .regex(phoneRegex, "Enter a valid Pakistani number (e.g., 03XXXXXXXXX)"),
+  image: z.instanceof(File, { message: "Image is required" }),
 });
+
 
 const LocationPicker = ({ markerPos, setMarkerPos, onLocationSelect }) => {
   useMapEvents({
@@ -51,6 +58,7 @@ const LocationPicker = ({ markerPos, setMarkerPos, onLocationSelect }) => {
 
 const CreatePost = () => {
   const [markerPos, setMarkerPos] = useState([24.8607, 67.0011]);
+  const { userDetails } = useAuth();
 
   const {
     register,
@@ -58,20 +66,24 @@ const CreatePost = () => {
     setValue,
     watch,
     formState: { errors },
+    reset
   } = useForm({
     resolver: zodResolver(postSchema),
     defaultValues: {
       title: '',
       location: '',
       description: '',
+      contact: '',
       image: undefined,
     },
   });
 
   const onSubmit = async (data) => {
     const formData = new FormData();
+    formData.append('username', userDetails.username);
     formData.append('title', data.title);
     formData.append('location', data.location);
+    formData.append('contact', data.contact);
     formData.append('description', data.description);
     if (data.image) {
       formData.append('image', data.image);
@@ -84,11 +96,12 @@ const CreatePost = () => {
         title: "Success",
         description: "Post submitted successfully",
       });
+      reset();
     } else {
       toast({
         variant: "destructive",
         title: "Error",
-        description: res.message || "Error submitting post",
+        description: res.data?.message || "Error submitting post",
       });
     }
   };
@@ -150,6 +163,14 @@ const CreatePost = () => {
             </div>
             {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>}
           </div>
+
+          {/* Contact */}
+          <div>
+            <label className="block text-sm font-semibold mb-1">Contact Information</label>
+            <Input {...register("contact")} placeholder="Phone number or email" />
+            {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>}
+          </div>
+
 
           {/* Description */}
           <div>
