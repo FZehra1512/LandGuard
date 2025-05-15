@@ -38,8 +38,8 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <ul className="hidden lg:flex w-1/3 justify-between text-xl font-medium">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#alerts">Alerts</a></li>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/greeneryDashboard">Alerts</Link></li>
           <li><Link to="/story">Our Story</Link></li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
@@ -87,19 +87,19 @@ const Navbar = () => {
         <div className={`w-full bg-white rounded-md`}>
           <ul className="flex flex-col items-center space-y-4 py-5 text-lg font-medium">
             <li>
-              <a href="#home" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/" onClick={() => setIsMenuOpen(false)}>
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#alerts" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/greeneryDashboard" onClick={() => setIsMenuOpen(false)}>
                 Alerts
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/story" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/story" onClick={() => setIsMenuOpen(false)}>
                 Our Story
-              </a>
+              </Link>
             </li>
             <li>
               <Link to="/contact">Contact</Link>
