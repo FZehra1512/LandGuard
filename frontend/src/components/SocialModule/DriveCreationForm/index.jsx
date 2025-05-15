@@ -52,8 +52,7 @@ const DriveCreationForm = ({ onSuccess, className, ...props }) => {
       ...data,
       dateTime: new Date(data.dateTime).toISOString(),
       status: "pending",
-      participants: 1,
-      joinedUsers: [userDetails?.email],
+      participants: [userDetails?.email],
       createdAt: new Date().toISOString(),
     };
 

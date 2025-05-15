@@ -22,7 +22,7 @@ const items = [
   },
   {
     title: "Plantation sites",
-    url: "/user",
+    url: "/user/posts",
     icon: MapPinCheck,
   },
   {

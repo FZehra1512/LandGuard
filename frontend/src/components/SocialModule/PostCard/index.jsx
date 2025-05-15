@@ -5,7 +5,7 @@ import { MapPin, Info } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const PostCard = ({ post }) => {
-  const { title, image, description, location, date, organizer } = post;
+  const { title, image, description, location, username, contact} = post;
 
   const hasCoordinates = location?.latitude && location?.longitude;
 
@@ -46,11 +46,6 @@ const PostCard = ({ post }) => {
           </p>
         )}
 
-        <div className="mt-3 text-xs text-gray-500 space-y-1">
-          {date && <p><strong>Date:</strong> {new Date(date).toLocaleDateString()}</p>}
-          {organizer && <p><strong>Organizer:</strong> {organizer}</p>}
-        </div>
-
         <Button
           variant="ghost"
           className="mt-5 w-full flex items-center justify-center gap-2 border border-green-600 text-green-700 hover:bg-green-50 hover:text-green-900 rounded-xl transition"
@@ -80,14 +75,14 @@ const PostCard = ({ post }) => {
 
           {/* Username and Contact Info */}
           <div className="mt-4 text-sm text-gray-700 space-y-1">
-            {post.username && (
+            {username && (
               <p>
-                <strong>Posted by:</strong> {post.username}
+                <strong>Posted by:</strong> {username}
               </p>
             )}
-            {post.contact && (
+            {contact && (
               <p>
-                <strong>Contact:</strong> {post.contact}
+                <strong>Contact:</strong> {contact}
               </p>
             )}
           </div>

@@ -22,6 +22,7 @@ import UserDrives from "@/pages/User/pages/UserDrives";
 import ContactPage from "@/pages/Contact";
 import ProtectedRoute from "./protectedRoutes";
 import ManageUsers from "@/pages/Admin/pages/AllUsers";
+import UserPosts from "@/pages/User/pages/UserPosts";
 
 // TODO:Implement lazy loading and loader component 
 
@@ -81,7 +82,8 @@ const router = createBrowserRouter([
             element: <UserLayout />,
             children: [
               { index: true, element: <UserProfile /> },
-              { path: "drives", element: <UserDrives /> }
+              { path: "drives", element: <UserDrives /> },
+              { path: "posts", element: <UserPosts /> }
             ]
           }
         ]
