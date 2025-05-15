@@ -235,7 +235,7 @@ const HistoricalDataForm = ({ selectedPolygon }) => {
         toast({
           variant: "success",
           title: "Success",
-          description: `Data retrieved successfully ${data.toDate}`,
+          description: `Data retrieved successfully`,
         });
       } else {
         console.log(apiresponse.code);

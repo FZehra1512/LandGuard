@@ -5,6 +5,41 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
+export const getDateDifference = (startDateStr, endDateStr) => {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
+
+  let startYear = startDate.getUTCFullYear();
+  let startMonth = startDate.getUTCMonth();
+  let startDay = startDate.getUTCDate();
+
+  let endYear = endDate.getUTCFullYear();
+  let endMonth = endDate.getUTCMonth();
+  let endDay = endDate.getUTCDate();
+
+  let years = endYear - startYear;
+  let months = endMonth - startMonth;
+  let days = endDay - startDay;
+
+  // Adjust for negative days
+  if (days < 0) {
+    months -= 1;
+    // Get days in previous month of endDate
+    const previousMonth = (endMonth - 1 + 12) % 12;
+    const previousMonthYear = previousMonth === 11 ? endYear - 1 : endYear;
+    const daysInPreviousMonth = new Date(previousMonthYear, previousMonth + 1, 0).getUTCDate();
+    days += daysInPreviousMonth;
+  }
+
+  // Adjust for negative months
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  return { years, months, days };
+}
+
 export const formatDate = (dateString) =>
   new Date(dateString).toLocaleDateString("en-GB", {
     timeZone: "UTC",
