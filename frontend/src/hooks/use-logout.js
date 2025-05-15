@@ -11,7 +11,7 @@ export const useLogout = () => {
     try {
       setIsLoggingOut(true);
       const response = await logoutUser();
-      console.log(response);
+      // console.log(response);
 
       const shouldRedirect = [200, 205, 400, 401].includes(response.code);
 
