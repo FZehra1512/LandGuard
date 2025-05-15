@@ -16,38 +16,45 @@ import { toast } from "@/hooks/use-toast";
 import { joinDrive } from "@/api/SocialDataEndpoints";
 
 export default function DriveCard({ drive }) {
-  const { title, location, dateTime, participants, capacity, organizerName, contact } = drive;
+  const {
+    title,
+    location,
+    dateTime,
+    participants = [],
+    capacity,
+    organizerName,
+    contact,
+  } = drive;
+
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const progress = Math.min((participants / capacity) * 100, 100);
-  const isFull = participants >= capacity;
   const { userDetails } = useAuth();
-  const alreadyJoined = drive.joinedUsers.includes(userDetails.email);
 
-  // const handleConfirmJoin = async () => {
-  //   try {
-  //     const res = await joinDrive(drive._id); // API call
+  const participantsCount = participants.length;
+  const progress = Math.min((participantsCount / capacity) * 100, 100);
+  const isFull = participantsCount >= capacity;
+  // const alreadyJoined = participants.includes(userDetails?.email);
+  const alreadyJoined = false;
 
-  //     toast({
-  //       variant: "success",
-  //       title: "Joined!",
-  //       description: "You’ve successfully joined this drive 🌱",
-  //     });
+  
 
-  //     setDialogOpen(false);
-  //   } catch (err) {
-  //     toast({
-  //       variant: "destructive",
-  //       title: "Failed to Join",
-  //       description: err.message || "Something went wrong",
-  //     });
-  //   }
-  // };
+  const handleConfirmJoin = async () => {
+    try {
+      await joinDrive(drive._id); // API call to backend to join
 
-    const handleConfirmJoin = () => {
-    setDialogOpen(false);
-    // You can add your join logic here, like API call
-    console.log("User confirmed join!");
+      toast({
+        variant: "success",
+        title: "Joined!",
+        description: "You’ve successfully joined this drive 🌱",
+      });
+
+      setDialogOpen(false);
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Join",
+        description: err.message || "Something went wrong",
+      });
+    }
   };
 
   return (
@@ -88,7 +95,9 @@ export default function DriveCard({ drive }) {
               style={{ width: `${progress}%` }}
             ></div>
           </div>
-          <div className="text-xs text-gray-500">{participants} out of {capacity} participants joined!</div>
+          <div className="text-xs text-gray-500">
+            {participantsCount} out of {capacity} participants joined!
+          </div>
         </div>
 
         {/* Join Button with Dialog */}
@@ -115,9 +124,7 @@ export default function DriveCard({ drive }) {
               <Button variant="outline" onClick={() => setDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleConfirmJoin}>
-                Confirm
-              </Button>
+              <Button onClick={handleConfirmJoin}>Confirm</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

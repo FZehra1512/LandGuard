@@ -52,10 +52,36 @@ export const createLandPost = async (formData) => {
 
 export const joinDrive = async (driveId) => {
   try {
-    const response = await api.post(`/drives/${driveId}/join`);
+    const response = await api.post(`/drives/${driveId}/join/`);
     return response.data;
   } catch (error) {
     console.error("Join drive error:", error.response?.data || error.message);
     throw error.response?.data || error;
   }
 };
+
+
+export const getUserDrives = async () => {
+  try {
+    const response = await api.get('/drive/my-drives'); 
+    return { code: response.status, data: response.data };
+  } catch (error) {
+    return {
+      code: error.response?.status || 500,
+      data: error.response?.data || error.message,
+    };
+  }
+};
+
+export const deleteDrive = async (driveId) => {
+  try {
+    const response = await api.delete(`/drive/delete/${driveId}`);
+    return { code: response.status, data: response.data };
+  } catch (error) {
+    return {
+      code: error.response?.status || 500,
+      data: error.response?.data || error.message,
+    };
+  }
+};
+

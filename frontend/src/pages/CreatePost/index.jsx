@@ -19,6 +19,7 @@ import Navbar from '@/components/Navbar';
 import { createLandPost } from '@/api/SocialDataEndpoints';
 import SearchBox from '@/components/SocialModule/FormSearch';
 import 'leaflet/dist/leaflet.css';
+import { useAuth } from '@/providers/AuthProvider';
 
 // Fix leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
