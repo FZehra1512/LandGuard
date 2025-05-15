@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Polygon, Popup } from "react-leaflet";
 import PolygonPopup from "@/components/GreeneryDashboardComponents/PolygonPopup";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import NDVIInfoCard from "../NDVIInfoCard";
+import NDVIInfoCard from "@/components/GreeneryDashboardComponents/NDVIInfoCard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobileDrawer from "@/components/ui/mobile-drawer";
 

@@ -13,7 +13,7 @@ import TermsOfService from "@/components/TermsOfService";
 import PrivacyPolicy from "@/components/PrivacyPolicy";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "@/components/Auth/GoogleAuthButton";
-import { signUpUser } from "@/api/authEndpoints";
+import { signUpUser, googleAuth } from "@/api/authEndpoints";
 import { useAuth } from "@/providers/AuthProvider";
 
 const formSchema = z.object({
@@ -37,17 +37,50 @@ const formSchema = z.object({
     ),
 });
 
-const handleGoogleSignUp = async (googleToken) => {
-  // TODO: Call Actual Api for your app token
-  // const res = await axios.post("/api/auth/google", { token: googleToken });
-  // const appToken = res.data.token;
-  toast({
-    variant: "success",
-    title: "Success",
-    description: `Signed up successfully with token: ${googleToken}`,
-  });
-  // localStorage.setItem("token", appToken); // Or store it in cookies
-  // Save it in localStorage or an httpOnly cookie.
+export const handleGoogleAuth = async (googleToken, callbacks) => {
+  try {
+    const payload = {
+      token: googleToken,
+    };
+    // console.log(payload);
+    const res = await googleAuth(payload);
+    // console.log(res);
+    if (res.code === 200) {
+      localStorage.setItem("landGuardtoken", res.data.access);
+      localStorage.setItem("landGuardRefreshtoken", res.data.refresh);
+
+      // Call the provided callbacks
+      callbacks.setIsUser(true);
+      callbacks.setUserDetails(res.data.user);
+    
+      toast({
+        variant: "success",
+        title: "Success",
+        description: "Signed up successfully.",
+      });
+      setTimeout(() => {
+        callbacks.navigate("/");
+      }, 500);
+    } else if (res.code === 401) {
+      toast({
+        variant: "warning",
+        title: "Error",
+        description: "Your email verification failed",
+      });
+    } else {
+      toast({
+        variant: "warning",
+        title: "Error",
+        description: "No account found",
+      });
+    }
+  } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Error", 
+      description: "Failed to Sign Up",
+    });
+  }
 };
 
 const SignUpForm = ({ className, ...props }) => {
@@ -62,6 +95,10 @@ const SignUpForm = ({ className, ...props }) => {
       password: "",
     },
   });
+
+  const handleGoogleSignUp = (googleToken) => {
+    handleGoogleAuth(googleToken, { setIsUser, setUserDetails, navigate });
+  };
 
   const onSubmit = async (data) => {
     try {

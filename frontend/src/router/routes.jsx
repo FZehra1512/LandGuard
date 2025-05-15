@@ -21,11 +21,10 @@ import UserProfile from "@/pages/User/pages/Profile";
 import UserDrives from "@/pages/User/pages/UserDrives";
 import ContactPage from "@/pages/Contact";
 import ProtectedRoute from "./protectedRoutes";
+import ManageUsers from "@/pages/Admin/pages/AllUsers";
 import UserPosts from "@/pages/User/pages/UserPosts";
 
-// TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
-// TODO: The app loads on each route idk why?
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -69,7 +68,8 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <AdminHome /> },
               { path: "managelocations", element: <ManageLocations /> },
-              { path: "addlocation", element: <AddLocation /> }
+              { path: "addlocation", element: <AddLocation /> },
+              { path: "users", element: <ManageUsers /> }
             ]
           }
         ]

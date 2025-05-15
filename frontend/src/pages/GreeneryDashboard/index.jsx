@@ -9,16 +9,18 @@ import {
 } from "react-leaflet";
 import MinimapControl from "@/components/GreeneryDashboardComponents/Minimap";
 import PolygonLayer from "@/components/GreeneryDashboardComponents/PolygonLayer";
-import GeocoderSearch from "@/components/GreeneryDashboardComponents/GeocoderSearch";
 import { useNdvi } from "@/hooks/use-ndvi";
+import logo from "@/assets/images/Landguard_logo.png";
 
 import L from "leaflet";
 import "./greeneryDashboard.css";
 import "leaflet/dist/leaflet.css";
 import LocateButton from "@/components/GreeneryDashboardComponents/LocateButton";
 import { useViewportHeight } from "@/hooks/use-viewport-height";
-import { Loader2 } from "lucide-react";
+import { Home, Loader2 } from "lucide-react";
 import SearchBox from "@/components/GreeneryDashboardComponents/GeocoderSearch";
+import { Link } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const layerOptions = {
   esri: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -38,6 +40,7 @@ const GreeneryDashboard = () => {
   const [userLocation, setUserLocation] = useState(null);
   const { ndviPolygons, loading } = useNdvi();
   const vh = useViewportHeight();
+  const isMobile = useIsMobile();
 
   return (
     <MapContainer
@@ -53,6 +56,15 @@ const GreeneryDashboard = () => {
           <Loader2 className="animate-spin w-10 h-10 text-accent" />
         </div>
       )}
+      <div className="absolute top-16 left-4 md:top-3 md:left-[45%] z-[2000] w-fit p-2 shadow-md rounded-md md:rounded-lg bg-background">
+        <Link to="/">
+          {isMobile ? (
+            <Home className="w-6 h-6" />
+          ) : (
+            <img src={logo} alt="Logo" className="w-32 sm:w-36" />
+          )}
+        </Link>
+      </div>
       <ZoomControl position="topright" />
       <ScaleControl position="topright" />
       <SearchBox setSearchLocation={setUserLocation}/>
