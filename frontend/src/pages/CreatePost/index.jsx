@@ -15,11 +15,13 @@ import {
 import L from 'leaflet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import Navbar from '@/components/Navbar';
+import { Link } from 'react-router-dom';
+import logo from "../../assets/images/Landguard_logo.png";
 import { createLandPost } from '@/api/SocialDataEndpoints';
 import SearchBox from '@/components/SocialModule/FormSearch';
 import 'leaflet/dist/leaflet.css';
 import { useAuth } from '@/providers/AuthProvider';
+import Footer from '@/components/Footer';
 
 // Fix leaflet icons
 delete L.Icon.Default.prototype._getIconUrl;
@@ -113,7 +115,12 @@ const CreatePost = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
+      <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
+        <Link to="/">
+          <img src={logo} alt="Logo" className="w-40 sm:w-44" />
+        </Link>
+      </nav>
       <main className="min-h-screen px-4 sm:px-6 lg:px-8 py-20">
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold text-primary">Post Your Land for Plantation</h1>
@@ -199,6 +206,7 @@ const CreatePost = () => {
           </Button>
         </form>
       </main>
+      <Footer/>
     </>
   );
 };

@@ -40,7 +40,7 @@ export default function FilterBar() {
   const areaOptions = ["Urban", "Rural", "Suburban"];
 
   return (
-    <div className="relative z-10 -mt-12">
+    <div className="relative z-10 -mt-16">
       <div className="container mx-auto px-6 md:px-12">
         <div className="bg-white p-4 shadow-md rounded-xl flex flex-wrap items-center gap-4">
           <Input
