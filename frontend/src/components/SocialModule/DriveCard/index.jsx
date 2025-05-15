@@ -15,7 +15,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import { toast } from "@/hooks/use-toast";
 import { joinDrive } from "@/api/SocialDataEndpoints";
 
-export default function DriveCard({ drive }) {
+export default function DriveCard({ drive, refreshDrives }) {
   const {
     title,
     location,
@@ -32,10 +32,7 @@ export default function DriveCard({ drive }) {
   const participantsCount = participants.length;
   const progress = Math.min((participantsCount / capacity) * 100, 100);
   const isFull = participantsCount >= capacity;
-  // const alreadyJoined = participants.includes(userDetails?.email);
   const alreadyJoined = false;
-
-  
 
   const handleConfirmJoin = async () => {
     try {
@@ -48,6 +45,10 @@ export default function DriveCard({ drive }) {
       });
 
       setDialogOpen(false);
+
+      // ✅ Call refreshDrives to update the list
+      if (refreshDrives) refreshDrives();
+
     } catch (err) {
       toast({
         variant: "destructive",
@@ -59,12 +60,10 @@ export default function DriveCard({ drive }) {
 
   return (
     <div className="relative overflow-hidden bg-white p-6 rounded-2xl shadow-lg flex flex-col gap-5 transition hover:shadow-xl group">
-      {/* Decorative Ribbon */}
       <div className="absolute top-0 left-0 bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-br-xl">
         🌱 Plantation Drive
       </div>
 
-      {/* Main Content */}
       <div>
         <h2 className="text-2xl font-bold mt-4 mb-2 group-hover:text-green-700 transition">
           {title}
@@ -75,8 +74,6 @@ export default function DriveCard({ drive }) {
         <div className="text-gray-600 text-sm flex items-center gap-1">
           📅 <span>{new Date(dateTime).toDateString()}</span>
         </div>
-
-        {/* Organizer Info */}
         <div className="text-gray-600 text-sm mb-1 mt-2 flex items-center gap-1">
           👤 <span>Organizer: {organizerName}</span>
         </div>
@@ -85,9 +82,7 @@ export default function DriveCard({ drive }) {
         </div>
       </div>
 
-      {/* Progress + Join Row */}
       <div className="flex items-center gap-4 mt-2">
-        {/* Progress Bar Section */}
         <div className="flex-1">
           <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
             <div
@@ -100,7 +95,6 @@ export default function DriveCard({ drive }) {
           </div>
         </div>
 
-        {/* Join Button with Dialog */}
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button

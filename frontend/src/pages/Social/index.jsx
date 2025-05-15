@@ -25,6 +25,8 @@ export default function SocialPostsPage() {
             id: post._id,
             title: post.title,
             description: post.description,
+            username: post.username,      
+            contact: post.contact,  
             location: {
               name: "Unknown",
               latitude: lat,

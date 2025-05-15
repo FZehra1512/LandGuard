@@ -21,6 +21,7 @@ import UserProfile from "@/pages/User/pages/Profile";
 import UserDrives from "@/pages/User/pages/UserDrives";
 import ContactPage from "@/pages/Contact";
 import ProtectedRoute from "./protectedRoutes";
+import UserPosts from "@/pages/User/pages/UserPosts";
 
 // TODO: Google Auth k liye university id use ki hai
 // TODO:Implement lazy loading and loader component 
@@ -81,7 +82,8 @@ const router = createBrowserRouter([
             element: <UserLayout />,
             children: [
               { index: true, element: <UserProfile /> },
-              { path: "drives", element: <UserDrives /> }
+              { path: "drives", element: <UserDrives /> },
+              { path: "posts", element: <UserPosts /> }
             ]
           }
         ]

@@ -19,7 +19,8 @@ export default function UserDriveCard({ drive, onDriveDeleted }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const progress = Math.min((participants / capacity) * 100, 100);
+  const participantsCount = participants.length;
+  const progress = Math.min((participantsCount / capacity) * 100, 100);
 
   const handleDelete = async () => {
     try {
@@ -79,7 +80,7 @@ export default function UserDriveCard({ drive, onDriveDeleted }) {
               style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="text-xs text-gray-500">{participants} / {capacity} participants</div>
+          <div className="text-xs text-gray-500">{participantsCount} / {capacity} participants</div>
         </div>
 
         {/* Delete Button with Dialog */}
