@@ -63,8 +63,6 @@ export default function SocialPostsPage() {
           alt="Header background"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-green-900 opacity-50"></div>
-
         <div className="relative z-10 container mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Community Plantation Spots

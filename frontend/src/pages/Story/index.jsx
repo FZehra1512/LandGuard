@@ -1,117 +1,8 @@
-// import { Button } from "@/components/ui/button";
-
-// // Images
-// import heroImage from "@/assets/images/contact_page_img.png";
-// import barren1 from "@/assets/images/CUF_Before.png";
-// import barren2 from "@/assets/images/CUF_Before.png";
-// import emptyPlot from "@/assets/images/CUF_Before.png";
-// import plantationEffort1 from "@/assets/images/CUF_after.png";
-// import plantationEffort2 from "@/assets/images/CUF_after.png";
-// import futureGreen from "@/assets/images/CUF_after.png";
-
-// export default function StoryPage() {
-//   return (
-//     <div className="bg-[#FAF9F5] flex flex-col items-center">
-
-//       {/* Hero Section */}
-//       <section className="relative w-full h-[75vh] flex items-center justify-center bg-green-800 text-white">
-//         <img src={heroImage} alt="LandGuard Hero" className="absolute inset-0 w-full h-full object-cover opacity-70" />
-//         <div className="relative text-center px-6">
-//           <h1 className="text-4xl md:text-6xl font-bold">Reviving Karachi's Lost Green Spaces</h1>
-//           <p className="text-lg md:text-2xl mt-4">LandGuard: Mapping the path back to nature</p>
-//         </div>
-//       </section>
-
-//       {/* Stats Section */}
-//       <section className="text-center max-w-3xl px-6 py-16 space-y-4">
-//         <div className="flex justify-center gap-8 text-green-800 font-bold text-xl md:text-2xl">
-//           <div>60% Green Cover Lost</div>
-//           <div>1200+ Public Grounds Surveyed</div>
-//           <div>300+ Volunteer Drives</div>
-//         </div>
-//         <p className="text-gray-700 mt-6 text-lg leading-relaxed">
-//           Karachi’s ecosystem has faced severe depletion due to rapid urban growth. With the help of volunteers, NGOs, and concerned citizens, 
-//           LandGuard maps spaces that are ready for transformation — bringing hope back into the city's heart.
-//         </p>
-//       </section>
-
-//       {/* Quote Section */}
-//       <section className="max-w-2xl text-center px-6 py-12">
-//         <blockquote className="text-green-700 text-2xl italic font-semibold">
-//           "The true measure of a city's strength lies not in its skyscrapers, but in the shade of its trees."
-//         </blockquote>
-//       </section>
-
-//       {/* First Gallery */}
-//       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl px-6 py-12">
-//         <img src={barren1} alt="Barren Area 1" className="rounded-2xl shadow-lg" />
-//         <img src={barren2} alt="Barren Area 2" className="rounded-2xl shadow-lg" />
-//       </section>
-
-//       {/* Story Text */}
-//       <section className="max-w-3xl text-center px-6 py-12 space-y-6">
-//         <p className="text-gray-700 text-lg leading-relaxed">
-//           Once flourishing with trees and public parks, Karachi’s landscape today bears the scars of unchecked development. 
-//           The loss of green spaces has led to soaring temperatures, pollution spikes, and weakened community health.
-//         </p>
-//         <p className="text-gray-700 text-lg leading-relaxed">
-//           Yet in the midst of this change, seeds of hope remain.
-//         </p>
-//       </section>
-
-//       {/* Full Width Image */}
-//       <section className="w-full max-w-5xl px-6 py-12">
-//         <img src={emptyPlot} alt="Empty Plot" className="rounded-2xl shadow-lg w-full" />
-//       </section>
-
-//       {/* Mission Text */}
-//       <section className="max-w-3xl text-center px-6 py-12 space-y-6">
-//         <p className="text-gray-700 text-lg leading-relaxed">
-//           LandGuard connects citizens, students, and NGOs with a growing database of potential plantation sites across Karachi. 
-//           From abandoned plots to underutilized parks, every corner of the city holds the promise of renewal.
-//         </p>
-//       </section>
-
-//       {/* Second Gallery */}
-//       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl px-6 py-12">
-//         <img src={plantationEffort1} alt="Plantation Effort 1" className="rounded-2xl shadow-lg" />
-//         <img src={plantationEffort2} alt="Plantation Effort 2" className="rounded-2xl shadow-lg" />
-//       </section>
-
-//       {/* Big Quote */}
-//       <section className="max-w-2xl text-center px-6 py-12">
-//         <blockquote className="text-green-700 text-2xl italic font-semibold">
-//           "Every sapling planted is a pledge to the future — a promise that Karachi will breathe again."
-//         </blockquote>
-//       </section>
-
-//       {/* Final Call to Action Text */}
-//       <section className="max-w-3xl text-center px-6 py-12 space-y-6">
-//         <p className="text-gray-700 text-lg leading-relaxed">
-//           By collaborating with passionate individuals and organizations, LandGuard charts the way forward for Karachi's green revival. 
-//           Together, we can reclaim the spaces we once loved — and those we have yet to discover.
-//         </p>
-//       </section>
-
-//       {/* Final Image */}
-//       <section className="w-full max-w-5xl px-6 py-12">
-//         <img src={futureGreen} alt="Future Green Karachi" className="rounded-2xl shadow-lg w-full" />
-//       </section>
-
-//       {/* CTA Button */}
-//       <section className="py-20">
-//         <Button size="lg" className="bg-green-700 text-white hover:bg-green-800">
-//           Explore Plantation Areas
-//         </Button>
-//       </section>
-
-//     </div>
-//   );
-// }
-
-
-
 import plantationEffort2 from "@/assets/images/CUF_after.png";
+import urbanForrest from "@/assets/images/CliftonForrest.png";
+import forrest from "@/assets/images/story3.png";
+
+import Footer from "@/components/Footer";
 
 export default function StoryPage() {
   return (
@@ -119,7 +10,7 @@ export default function StoryPage() {
       {/* Hero Section */}
       <section
         className="relative h-[90vh] bg-cover bg-center flex items-center justify-center text-white"
-        style={{ backgroundImage: `url(${plantationEffort2})` }}
+        style={{ backgroundImage: `url(${forrest})` }}
       >
         <div className="bg-black/60 p-10 rounded-2xl max-w-3xl text-center shadow-xl">
           <h1 className="text-5xl font-bold mb-4">Reclaiming Karachi’s Barren Lands</h1>
@@ -131,7 +22,7 @@ export default function StoryPage() {
       </section>
 
       {/* Clifton Urban Forest Section */}
-      <section className="grid grid-cols-1 md:grid-cols-2 h-auto bg-[#d2a94f] text-black py-20">
+      <section className="grid grid-cols-1 md:grid-cols-2 h-auto bg-[#f5e8cb] text-black py-20">
         {/* Left - Text Panel */}
         <div className="flex flex-col justify-center px-8 md:px-20">
           <h2 className="text-5xl font-semibold leading-tight mb-6 tracking-wide">
@@ -169,7 +60,7 @@ export default function StoryPage() {
         {/* Right - Image and Stats */}
         <div className="relative overflow-hidden">
           <img
-            src={plantationEffort2}
+            src={urbanForrest}
             alt="Clifton Urban Forest"
             className="object-cover w-full h-full"
           />
@@ -228,12 +119,13 @@ export default function StoryPage() {
           welcomes your efforts to create a greener Karachi.
         </p>
         <a
-          href="/explore"
+          href="/drives"
           className="bg-green-700 hover:bg-green-800 text-white px-8 py-4 text-lg rounded-full shadow-lg"
         >
           Explore Drives
         </a>
       </section>
+      <Footer/>
     </div>
   );
 }
