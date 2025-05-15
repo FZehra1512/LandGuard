@@ -4,6 +4,7 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ allowedRole }) => {
   const { isUser, userDetails, isLoading } = useAuth();
+  console.log("userdetails", userDetails)
   const location = useLocation();
 
   // Show loading state while auth is being checked

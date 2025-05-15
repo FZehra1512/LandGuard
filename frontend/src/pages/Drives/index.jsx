@@ -10,6 +10,8 @@ import DrivesHero from "@/components/SocialModule/DrivesHero";
 import DrivesFilterBar from "@/components/SocialModule/DrivesFilterBar";
 import DriveCard from "@/components/SocialModule/DriveCard";
 import { getDrives } from "@/api/SocialDataEndpoints"; 
+import AppLoader from "@/components/ui/app-loader";
+import Footer from "@/components/Footer";
 
 
 const dummyDrives = [
@@ -125,16 +127,17 @@ export default function DrivesPage() {
       <section className="container mx-auto px-6 md:px-12 py-12">
         <div className="flex flex-col gap-6">
           {loading ? (
-            <p>Loading drives...</p>
+            <AppLoader />
           ) : drives.length === 0 ? (
             <p className="text-gray-600 text-center">No drives available at the moment.</p>
           ) : (
             drives.map((drive) => (
-              <DriveCard key={drive.id} drive={drive} />
+              <DriveCard key={drive._id} drive={drive} />
             ))
           )}
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

@@ -29,10 +29,10 @@ const PostCard = ({ post }) => {
         />
 
         {/* Location Tag */}
-        <div className="absolute top-3 left-3 flex items-center gap-2 bg-white/90 backdrop-blur-sm text-green-800 font-medium px-3 py-1 text-xs rounded-full shadow">
+        {/* <div className="absolute top-3 left-3 flex items-center gap-2 bg-white/90 backdrop-blur-sm text-green-800 font-medium px-3 py-1 text-xs rounded-full shadow">
           <MapPin className="w-4 h-4" />
           <span>{location?.name || "Unknown Location"}</span>
-        </div>
+        </div> */}
       </div>
 
       <div className="p-5">

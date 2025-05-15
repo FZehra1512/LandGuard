@@ -4,86 +4,55 @@ import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import FilterBar from "@/components/SocialModule/FilterBar";
 import image1 from "@/assets/images/plant_bg1.png";
-import image2 from "@/assets/images/contact_page_img.png";
 import logo from "../../assets/images/Landguard_logo.png";
 import { getPosts } from "@/api/SocialDataEndpoints";
-import { useAuth } from "@/providers/AuthProvider";
-
-const dummyPosts = [
-  {
-    id: 1,
-    username: "Sana Maryam",
-    contact: "012787t24",
-    title: "Empty Garden Behind House",
-    description: "A good-sized garden area that could host 10–15 plants.",
-    location: {
-      name: "Karachi, Pakistan",
-      latitude: 24.8607,
-      longitude: 67.0011,
-    },
-    image: image1,
-  },
-  {
-    id: 2,
-    username: "Sana Maryam",
-    contact: "012787t24",
-    title: "Vacant Plot Near Gulshan",
-    description: "Unused land available for plantation initiatives.",
-    location: {
-      name: "Gulshan-e-Iqbal, Karachi",
-      latitude: 24.9263,
-      longitude: 67.1124,
-    },
-    image: image2,
-  },
-];
-
+import Footer from '@/components/Footer';
 
 export default function SocialPostsPage() {
-
   const [posts, setPosts] = useState([]);
-  const { userDetails } = useAuth();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const getPostsFromBackend = async () => {
-    try {
-      const { data } = await getPosts();
+    const getPostsFromBackend = async () => {
+      setLoading(true);
+      try {
+        const { data } = await getPosts();
 
-      // Transform API response to match PostsGrid structure
-      const transformedPosts = data.map(post => {
-        const [lat, lng] = post.location.split(',').map(coord => parseFloat(coord.trim()));
+        const transformedPosts = data.map(post => {
+          const [lat, lng] = post.location.split(',').map(coord => parseFloat(coord.trim()));
 
-        return {
-          id: post._id,
-          title: post.title,
-          description: post.description,
-          location: {
-            name: "Unknown", // or get it from reverse geocoding later
-            latitude: lat,
-            longitude: lng,
-          },
-          image: post.image_url.startsWith("http")
-            ? post.image_url
-            : `http://127.0.0.1:8000${post.image_url}`,  // full image path
-        };
-      });
+          return {
+            id: post._id,
+            title: post.title,
+            description: post.description,
+            location: {
+              name: "Unknown",
+              latitude: lat,
+              longitude: lng,
+            },
+            image: post.image_url.startsWith("http")
+              ? post.image_url
+              : `http://127.0.0.1:8000${post.image_url}`,
+          };
+        });
 
-      setPosts(transformedPosts);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  };
+        setPosts(transformedPosts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  getPostsFromBackend();
-}, []);
-
+    getPostsFromBackend();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="fixed top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
-             <Link to="/">
-               <img src={logo} alt="Logo" className="w-40 sm:w-44" />
-             </Link>
+        <Link to="/">
+          <img src={logo} alt="Logo" className="w-40 sm:w-44" />
+        </Link>
       </nav>
 
       <section className="relative pt-28 pb-20 px-6 md:px-12 overflow-hidden bg-green-700 text-white">
@@ -101,7 +70,7 @@ export default function SocialPostsPage() {
           <p className="text-lg mb-6 max-w-2xl mx-auto">
             Explore and share locations that are suitable for tree plantation.
           </p>
-        <Link to="/create-post">
+          <Link to="/create-post">
             <Button
               variant="default"
               size="lg"
@@ -109,20 +78,25 @@ export default function SocialPostsPage() {
             >
               + Add a New Spot
             </Button>
-        </Link>
-
+          </Link>
         </div>
       </section>
 
       <FilterBar />
 
-      {/* 🪴 Posts Grid */}
-      <section className="bg-amber-50">
+      {/* 🌱 Posts Grid */}
+      <section className="bg-amber-50 py-12">
         <div className="container mx-auto px-6">
-          <PostsGrid posts={posts} />
+          {loading ? (
+            <div className="text-center py-12 text-gray-600 text-lg">Loading posts...</div>
+          ) : posts.length === 0 ? (
+            <p className="text-center py-12 text-gray-500">No posts found.</p>
+          ) : (
+            <PostsGrid posts={posts} />
+          )}
         </div>
       </section>
-
+      <Footer />
     </div>
   );
 }
