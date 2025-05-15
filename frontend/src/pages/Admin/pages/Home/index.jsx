@@ -2,18 +2,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Users, Activity, TrendingUp } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
+import { UsersContext } from "../../index";
+import { useContext } from "react";
+import { useNdvi } from "@/hooks/use-ndvi";
 // Sample data - replace with real data from your backend
 const data = [
+  { name: 'Dec', locations: 0 },
   { name: 'Jan', locations: 4 },
   { name: 'Feb', locations: 7 },
   { name: 'Mar', locations: 12 },
-  { name: 'Apr', locations: 15 },
-  { name: 'May', locations: 18 },
-  { name: 'Jun', locations: 24 },
+  { name: 'Apr', locations: 20 },
+  { name: 'May', locations: 34 },
 ];
 
 const AdminHome = () => {
+  const { users } = useContext(UsersContext);
+  const {ndviPolygons} = useNdvi()
   return (
     <div className="h-full py-6 space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -23,8 +27,8 @@ const AdminHome = () => {
             <MapPin className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">245</div>
-            <p className="text-xs text-muted-foreground">+20% from last month</p>
+            <div className="text-2xl font-bold">{ndviPolygons?.length || 34}</div>
+            <p className="text-xs text-muted-foreground">+41% from last month</p>
           </CardContent>
         </Card>
 
@@ -34,7 +38,7 @@ const AdminHome = () => {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold">{users?.length || 5}</div>
             <p className="text-xs text-muted-foreground">+15% from last month</p>
           </CardContent>
         </Card>
@@ -45,7 +49,7 @@ const AdminHome = () => {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">573</div>
+            <div className="text-2xl font-bold">63</div>
             <p className="text-xs text-muted-foreground">+5% from yesterday</p>
           </CardContent>
         </Card>
@@ -67,7 +71,7 @@ const AdminHome = () => {
           <CardTitle>Location Growth Overview</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-          <div className="h-[300px]">
+          <div className="h-36 md:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />

@@ -13,13 +13,25 @@ export const updateNDVIData = async (payload) => {
 };
 
 export const addLocation = async (payload) => {
-    try {
-      const response = await api.post("/ndvi/save/", { ...payload });
-      return { code: response.status, data: response.data };
-    } catch (error) {
-      return {
-        code: error.response?.status || 500,
-        data: error.response?.data || error.response,
-      };
-    }
-  };
+  try {
+    const response = await api.post("/ndvi/save/", { ...payload });
+    return { code: response.status, data: response.data };
+  } catch (error) {
+    return {
+      code: error.response?.status || 500,
+      data: error.response?.data || error.response,
+    };
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const response = await api.get("/users/");
+    return { code: response.status, data: response.data };
+  } catch (error) {
+    return {
+      code: error.response?.status || 500,
+      data: error.response?.data || error.response,
+    };
+  }
+};

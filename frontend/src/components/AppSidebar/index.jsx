@@ -1,4 +1,4 @@
-import logo from "../../assets/images/Landguard_white_logo.png"
+import logo from "@/assets/images/Landguard_white_logo.png"
 
 import {
   Sidebar,

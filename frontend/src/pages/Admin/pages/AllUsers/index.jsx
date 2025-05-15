@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -22,7 +22,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -34,16 +33,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatNDVIData } from "@/lib/utils";
-import { useNdvi } from "@/hooks/use-ndvi";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { updateNDVIData } from "@/api/adminEndPoints";
 import { toast } from "@/hooks/use-toast";
-import { getNDVIData } from "@/api/mapDataEndpoints";
-
-export const getMapUrl = (center) => {
-  return `https://www.google.com/maps/dir/?api=1&destination=${center[0]},${center[1]}`;
-}
+import { useContext } from "react";
+import { UsersContext } from "../../index";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const columns = [
   {
@@ -69,14 +70,32 @@ export const columns = [
     enableHiding: true,
   },
   {
-    accessorKey: "name",
-    header: () => <div className="w-48">Location Name</div>,
+    accessorKey: "username",
+    header: ({ column }) => {
+      return (
+        <div className="w-40 flex justify-start">
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="px-1"
+          >
+            Username
+            <ArrowUpDown />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => (
-      <div className="w-48 capitalize">{row.getValue("name")}</div>
+      <div className="w-40 capitalize">{row.getValue("username")}</div>
     ),
   },
   {
-    accessorKey: "area",
+    accessorKey: "email",
+    header: () => <div className="w-56">Email</div>,
+    cell: ({ row }) => <div className="w-56">{row.getValue("email")}</div>,
+  },
+  {
+    accessorKey: "userType",
     header: ({ column }) => {
       return (
         <div className="w-36 flex justify-start">
@@ -85,62 +104,32 @@ export const columns = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="px-1"
           >
-            Area
+            User Type
             <ArrowUpDown />
           </Button>
         </div>
       );
     },
     cell: ({ row }) => (
-      <div className="w-36 text-left capitalize">{row.getValue("area")}</div>
+      <div className="w-36 text-left capitalize">
+        {row.getValue("userType")}
+      </div>
     ),
   },
   {
-    accessorKey: "ndvi",
-    header: () => <div className="w-20 text-right">Mean NDVI</div>,
-    cell: ({ row }) => {
-      const amount = row.getValue("ndvi");
-      return <div className="w-20 text-right font-medium">{amount}</div>;
-    },
-  },
-  {
-    accessorKey: "minndvi",
-    header: () => <div className="w-16 text-right">Min NDVI</div>,
-    cell: ({ row }) => {
-      const amount = row.getValue("minndvi");
-      return <div className="w-16 text-right font-medium">{amount}</div>;
-    },
-  },
-  {
-    accessorKey: "maxndvi",
-    header: () => <div className="w-20 text-right">Max NDVI</div>,
-    cell: ({ row }) => {
-      const amount = row.getValue("maxndvi");
-      return <div className="w-20 text-right font-medium">{amount}</div>;
-    },
-  },
-  {
-    accessorKey: "fromDate",
-    header: () => <div className="w-[5.5rem] text-right">From Date</div>,
-    cell: ({ row }) => {
-      const fDate = formatDate(row.getValue("fromDate"));
-      return <div className="w-[5.5rem] text-right font-medium">{fDate}</div>;
-    },
-  },
-  {
-    accessorKey: "toDate",
-    header: () => <div className="w-[5.5rem] text-right">To Date</div>,
-    cell: ({ row }) => {
-      const tDate = formatDate(row.getValue("toDate"));
-      return <div className="w-[5.5rem] text-right font-medium">{tDate}</div>;
-    },
+    accessorKey: "joinedOn",
+    header: () => <div className="w-32">Joined On</div>,
+    cell: () => <div className="w-32">16-05-2025</div>,
   },
   {
     id: "actions",
     enableHiding: false,
     header: () => <div className="w-8"></div>,
     cell: ({ row }) => {
-      const ndviPolygon = row.original;
+      const handleDelete = () => {
+        // Handle delete logic here
+        // console.log("Deleting user:", row.original);
+      };
 
       return (
         <DropdownMenu>
@@ -152,18 +141,12 @@ export const columns = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <a
-                href={getMapUrl(ndviPolygon.coordinates[0])}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open Location
-              </a>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            {row.original.userType === "admin" ? (
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+            ) : (
+              <DropdownMenuItem>Promote to Admin</DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={() => row.toggleSelected(true)}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -171,19 +154,25 @@ export const columns = [
   },
 ];
 
-const ManageLocations = () => {
+const ManageUsers = () => {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { ndviPolygons, loading, setNdviPolygons } = useNdvi();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { users, loading } = useContext(UsersContext);
 
-  // Memoize the data to prevent unnecessary re-renders
   const data = useMemo(() => {
-    // Force a new array reference when ndviPolygons changes
-    return [...ndviPolygons];
-  }, [ndviPolygons]);
+    return [...users];
+  }, [users]);
+
+  const handleDelete = () => {
+    const selectedRows = table.getSelectedRowModel().rows;
+    // Handle delete logic here
+    console.log("Deleting users:", selectedRows.map(row => row.original));
+    setShowDeleteDialog(false);
+    setRowSelection({});
+  };
 
   const table = useReactTable({
     data,
@@ -202,100 +191,45 @@ const ManageLocations = () => {
       columnVisibility,
       rowSelection,
     },
-    // Set initial page size to 10 but allow it to grow based on container height
     initialState: {
       pagination: {
-        pageSize: Math.max(10, Math.floor((window.innerHeight - 280) / 53)) // 53px is approx height of each row
-      }
-    }
+        pageSize: Math.max(10, Math.floor((window.innerHeight - 280) / 53)),
+      },
+    },
   });
-
-  const handleUpdateNDVI = async () => {
-    try {
-      setIsSubmitting(true);
-      const selectedRows = table.getSelectedRowModel().rows;
-      const selectedData = selectedRows.map((row) => row.original);
-      if (selectedData.length > 10) {
-        toast({
-          variant: "warning",
-          title: "Warning",
-          description: "You can only select 10 rows at a time",
-        });
-        setIsSubmitting(false);
-        return;
-      }
-      const payload = {
-        locations: selectedData.map((item) => ({
-          place_name: item.name,
-          coordinates: item.coordinates,
-        })),
-      };
-      const apiresponse = await updateNDVIData(payload);
-      if (apiresponse.code === 200) {
-        // Format the updated data first
-        const formattedUpdates = formatNDVIData(apiresponse.data.results);
-        // console.log("formattedUpdates", formattedUpdates);
-        
-        setNdviPolygons((prevPolygons) => {
-          const updatedPolygons = [...prevPolygons];
-          
-          // Create a map of existing polygons for faster lookup
-          const polygonMap = new Map(
-            prevPolygons.map(p => [`${p.name}-${p.area}`, p])
-          );
-          
-          // Update only the changed polygons
-          formattedUpdates.forEach(updated => {
-            const key = `${updated.name}-${updated.area}`;
-            const existingPolygon = polygonMap.get(key);
-            
-            if (existingPolygon) {
-              const index = updatedPolygons.findIndex(
-                p => p.name === updated.name && p.area === updated.area
-              );
-              if (index !== -1) {
-                updatedPolygons[index] = {
-                  ...updated,
-                };
-              }
-            }
-          });
-
-          return updatedPolygons;
-        });
-
-        toast({
-          variant: "success",
-          title: "Success",
-          description: `Locations updated successfully!`,
-        });
-
-        setRowSelection({});
-        setIsSubmitting(false);
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update locations. Please try again.",
-      });
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="relative h-full w-full pt-6">
-      {(loading || isSubmitting) && (
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {table.getSelectedRowModel().rows.length} selected user(s)? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {loading && (
         <div className="absolute my-6 inset-0 bg-black/50 z-[2000] flex items-center justify-center rounded-[10px]">
           <Loader2 className="animate-spin w-10 h-10 text-accent" />
         </div>
       )}
       <div className="flex flex-col md:flex-row items-start md:items-center gap-5 pb-4">
         <Input
-          placeholder="Filter locations..."
-          value={table.getColumn("name")?.getFilterValue() ?? ""}
+          placeholder="Filter users..."
+          value={table.getColumn("email")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -303,9 +237,9 @@ const ManageLocations = () => {
           <Button
             variant="outline"
             disabled={table.getSelectedRowModel().rows.length < 1}
-            onClick={handleUpdateNDVI}
+            onClick={() => setShowDeleteDialog(true)}
           >
-            Update NDVI
+            Delete
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -422,4 +356,4 @@ const ManageLocations = () => {
   );
 };
 
-export default ManageLocations;
+export default ManageUsers;

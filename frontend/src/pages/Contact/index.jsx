@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-import logo from "@/assets/images/Landguard_logo.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -12,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import PrivacyPolicy from "@/components/PrivacyPolicy";
 import TermsOfService from "@/components/TermsOfService";
 import Footer from "@/components/Footer";
+import { LogoNavbar } from "@/components/Navbar";
 //TODO: Add inta link
 //TODO: Onsubmit integration
 const formSchema = z.object({
@@ -68,11 +67,7 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-svh flex flex-col">
-      <nav className="fixed bg-white top-0 left-0 right-0 z-50 w-full py-3 flex items-center">
-        <Link to="/">
-          <img src={logo} alt="Logo" className="w-40 sm:w-44" />
-        </Link>
-      </nav>
+      <LogoNavbar />
       <div className="min-h-svh flex flex-1 flex-col items-center justify-center bg-white pt-6 md:pt-10">
         <div className="w-full py-20 md:py-14 lg:py-8 px-6 sm:px-12 xl:px-32">
           <div className="grid lg:grid-cols-2 gap-12">
