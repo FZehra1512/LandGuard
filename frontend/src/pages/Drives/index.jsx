@@ -102,9 +102,6 @@ export default function DrivesPage() {
           ) : drives.length === 0 ? (
             <p className="text-gray-600 text-center">No drives available at the moment.</p>
           ) : (
-            // drives.map((drive) => (
-            //   <DriveCard key={drive._id} drive={drive} />
-            // ))
             drives.map((drive) => (
               <DriveCard key={drive._id} drive={drive} refreshDrives={refreshDrives} />
             ))

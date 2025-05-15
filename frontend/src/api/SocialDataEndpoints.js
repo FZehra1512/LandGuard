@@ -75,7 +75,7 @@ export const getUserDrives = async () => {
 
 export const deleteDrive = async (driveId) => {
   try {
-    const response = await api.delete(`/drive/delete/${driveId}`);
+    const response = await api.delete(`/drives/${driveId}/`);
     return { code: response.status, data: response.data };
   } catch (error) {
     return {
@@ -99,7 +99,7 @@ export const getUserPosts = async () => {
 
 export const deleteUserPost = async (postId) => {
   try {
-    const response = await api.delete(`/post/delete/${postId}`);
+    const response = await api.delete(`/posts/${postId}/`);
     return { code: response.status, data: response.data };
   } catch (error) {
     return {
