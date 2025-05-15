@@ -47,7 +47,7 @@ const ContactPage = () => {
       toast({
         variant: "success",
         title: "Success!",
-        description: `${data.name} ${data.email} ${data.website}`,
+        description: `Message sent successfully.`,
       });
 
       // toast({
