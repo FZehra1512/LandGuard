@@ -13,16 +13,16 @@ export const signUpUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-    try {
-      const response = await api.post("/login/", { ...payload });
-      return { code: response.status, data: response.data };
-    } catch (error) {
-      return {
-        code: error.response?.status || 500,
-        data: error.response?.data || error.response,
-      };
-    }
-  };
+  try {
+    const response = await api.post("/login/", { ...payload });
+    return { code: response.status, data: response.data };
+  } catch (error) {
+    return {
+      code: error.response?.status || 500,
+      data: error.response?.data || error.response,
+    };
+  }
+};
 
 export const validateUser = async () => {
   try {
@@ -43,6 +43,18 @@ export const logoutUser = async () => {
       access: localStorage.getItem("landGuardtoken"),
     };
     const response = await api.post("/logout/", { ...payload });
+    return { code: response.status, data: response.data };
+  } catch (error) {
+    return {
+      code: error.response?.status || 500,
+      data: error.response?.data || error.response,
+    };
+  }
+};
+
+export const googleAuth = async (payload) => {
+  try {
+    const response = await api.post("/google-auth/", { ...payload });
     return { code: response.status, data: response.data };
   } catch (error) {
     return {

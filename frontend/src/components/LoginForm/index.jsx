@@ -15,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import GoogleLoginButton from "@/components/Auth/GoogleAuthButton";
 import { loginUser } from "@/api/authEndpoints";
 import { useAuth } from "@/providers/AuthProvider";
+import { handleGoogleAuth } from "../SignUpForm";
 
 const formSchema = z.object({
   email: z
@@ -45,17 +46,8 @@ const LoginForm = ({ className, ...props }) => {
     },
   });
 
-  const handleGoogleLogin = async (googleToken) => {
-    // TODO: Call Actual Api for your app token
-    // const res = await axios.post("/api/auth/google", { token: googleToken });
-    // const appToken = res.data.token;
-    toast({
-      variant: "success",
-      title: "Success",
-      description: `Signed up successfully with token: ${googleToken}`,
-    });
-    // localStorage.setItem("token", appToken); // Or store it in cookies
-    // Save it in localStorage or an httpOnly cookie.
+  const handleGoogleLogin = (googleToken) => {
+    handleGoogleAuth(googleToken, { setIsUser, setUserDetails, navigate });
   };
 
   const onSubmit = async (data) => {
