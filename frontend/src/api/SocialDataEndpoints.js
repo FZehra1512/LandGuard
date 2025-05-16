@@ -39,7 +39,7 @@ export const createLandPost = async (formData) => {
 
   export const getPosts = async () => {
     try {
-      const response = await api.get('/post/getAll');
+      const response = await api.get('/post/getAll/');
       return { code: response.status, data: response.data };
     } catch (error) {
       return {
