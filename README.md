@@ -6,7 +6,7 @@
 
 > 🔗 **Video Explanation:** [Drive Link](https://drive.google.com/file/d/1PjABPE79m8jAi2XgkuRoHvQHOqFlv73g/view?usp=sharing)
 
-> 🔗 **Live Demo:** [https://landguard.vercel.app](https://landguard.vercel.app)
+> 🔗 **Live Demo:** [https://land-guard-ten.vercel.app](https://land-guard-ten.vercel.app)
 
 ---
 
@@ -62,7 +62,7 @@ As the **frontend developer**, I was responsible for:
 ---
 ## ☁️ Deployment
 
-The frontend is deployed using **Vercel**, enabling fast, serverless delivery with CI/CD integration for GitHub commits [https://landguard.vercel.app](https://landguard.vercel.app).
+The frontend is deployed using **Vercel**, enabling fast, serverless delivery with CI/CD integration for GitHub commits [https://land-guard-ten.vercel.app](https://land-guard-ten.vercel.app).
 
 ## 📷 Screenshots
 ![Home Page](https://github.com/user-attachments/assets/864ab085-3d3f-4eba-b7a0-0eac78324d03)
