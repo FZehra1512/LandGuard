@@ -103,7 +103,7 @@ The frontend is deployed using **Vercel**, enabling fast, serverless delivery wi
       Contribution
     </td>
     <td>Contributed to the development of Map Dashboard, Authentication, and Admin Panel</td>
-    <td>Contributed in Research and development of Social Module, and User Panel</td>
+    <td>Contributed in core ideation of project and feature. Extensive Research Work on data sources, technical APIs, and domain knowledge. Development of Social Module including plantation drives, user posts, and social media posts automation</td>
   </tr>
 </table>
 
