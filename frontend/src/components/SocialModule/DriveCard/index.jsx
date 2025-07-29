@@ -35,6 +35,15 @@ export default function DriveCard({ drive, refreshDrives }) {
   const alreadyJoined = false;
 
   const handleConfirmJoin = async () => {
+    if (!userDetails?.email) {
+      toast({
+        variant: "destructive",
+        title: "Login Required",
+        description: "Please log in to join this plantation drive.",
+      });
+      return;
+    }
+    
     try {
       await joinDrive(drive._id); // API call to backend to join
 
