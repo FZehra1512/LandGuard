@@ -81,6 +81,15 @@ const CreatePost = () => {
   });
 
   const onSubmit = async (data) => {
+
+    if (!userDetails?.username) {
+      toast({
+        variant: "destructive",
+        title: "Unauthorized",
+        description: "Please log in to post your land.",
+      });
+      return;
+    }
     const formData = new FormData();
     formData.append('username', userDetails.username);
     formData.append('title', data.title);

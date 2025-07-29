@@ -47,6 +47,15 @@ const DriveCreationForm = ({ onSuccess, className, ...props }) => {
 
 
   const onSubmit = async (data) => {
+    if (!userDetails?.username) {
+      toast({
+        variant: "destructive",
+        title: "Unauthorized",
+        description: "Please log in to create a drive.",
+      });
+      return;
+    }
+    
     try {
     const newData = {
       ...data,
